@@ -33,3 +33,4 @@
 /config/master.key
 config/credentials.json
 config/token.yml
+config/telebot.yml
