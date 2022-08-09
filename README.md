@@ -1,24 +1,17 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This Telegram bot can accept a Google Doc link and divide the doc into several parts with different background.
 
-Things you may want to cover:
+Possible commands:
 
-* Ruby version
+- `/start` - print this manual
 
-* System dependencies
+- `/divide URL` - divide the Google Doc located at _URL_ into several parts (about half a page each)
 
-* Configuration
+- `/divide URL N` - divide the Google Doc located at _URL_ into _N_ parts
 
-* Database creation
+- `/wip URL N` - start woring on the _Nth_ part of the Google doc located at _URL_ (adds a `[WIP]` marker in the beginning of the part)
 
-* Database initialization
+- `/finish URL N` - finish woring on the _Nth_ part of the Google doc located at _URL_ (removes all markers from the beginning of the part)
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- `/clear URL` - clear text backgrounds in the Google Doc located at _URL_
