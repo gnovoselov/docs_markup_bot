@@ -20,7 +20,7 @@ class FormatService < ApplicationService
         finish_index ||= document.body.content.last.end_index
         chunk_size ||= params[:parts] ? (finish_index / params[:parts]).round : DEFAULT_CHUNK_SIZE
 
-        if (structural_element.end_index - last_index >= chunk_size) && (finish_index - structural_element.end_index > chunk_size * 0.35)
+        if (structural_element.end_index - last_index >= chunk_size * 0.9) && (finish_index - structural_element.end_index > chunk_size * 0.35)
           color_index += 1
           last_index = structural_element.end_index
         end
