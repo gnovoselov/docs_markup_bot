@@ -11,6 +11,8 @@ class ClearService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       process_structural_element(document, structural_element, requests)
     end
+
+    "Cleared"
   end
 
   private

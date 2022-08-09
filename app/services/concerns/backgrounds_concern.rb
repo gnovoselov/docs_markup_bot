@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "google/apis/docs_v1"
-
 module BackgroundsConcern
   extend ActiveSupport::Concern
+
+  include TextConcern
 
   ALLOWED_COLORS = [
     [1, 1, 1],
@@ -38,27 +38,6 @@ module BackgroundsConcern
       background_color: create_color(*ALLOWED_COLORS[color_index])
     )
 
-    Google::Apis::DocsV1::Request.new(
-      update_text_style: Google::Apis::DocsV1::UpdateTextStyleRequest.new(
-        fields: 'background_color',
-        range: Google::Apis::DocsV1::Range.new(
-          start_index: element.start_index,
-          end_index: element.end_index
-        ),
-        text_style: text_style
-      )
-    )
-  end
-
-  def create_color(red, green, blue)
-    Google::Apis::DocsV1::OptionalColor.new(
-      color: Google::Apis::DocsV1::Color.new(
-        rgb_color: Google::Apis::DocsV1::RgbColor.new(
-          red: red,
-          green: green,
-          blue: blue
-        )
-      )
-    )
+    update_text_background(element.start_index, element.end_index, text_style)\
   end
 end

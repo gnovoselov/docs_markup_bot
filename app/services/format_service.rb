@@ -38,5 +38,7 @@ class FormatService < ApplicationService
         # puts "----------------------------"
       end
     end
+
+    "Done"
   end
 end

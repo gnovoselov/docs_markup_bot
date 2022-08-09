@@ -11,12 +11,16 @@ module DocumentsApiConcern
 
   def change_document(document_id)
     document = docs_adapter.get_document document_id
+    requests = []
 
     document.body.content.each do |structural_element|
-      yield(document, structural_element, request.requests)
+      yield(document, structural_element, requests)
     end
 
-    docs_adapter.batch_update_document(document.document_id, request)
+    if requests.any?
+      request.requests = requests
+      docs_adapter.batch_update_document(document.document_id, request)
+    end
   end
 
   def request
