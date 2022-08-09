@@ -12,6 +12,6 @@ Possible commands:
 
 - `/clear URL` - clear text backgrounds in the Google Doc located at _URL_
 
-- [Coming soon] `/wip URL N` - start woring on the _Nth_ part of the Google doc located at _URL_ (adds a `[WIP]` marker in the beginning of the part)
+- [Coming soon] `/take URL N` - start woring on the _Nth_ part of the Google doc located at _URL_ (adds a `[WIP]` marker in the beginning of the part)
 
 - [Coming soon] `/finish URL N` - finish woring on the _Nth_ part of the Google doc located at _URL_ (removes all markers from the beginning of the part)

@@ -5,21 +5,30 @@ class IncomingMessageService < ApplicationService
   # - bot: [Telegram::Bot] Bot instance
   # - message: [Telegram::Message] Incoming message
 
+  INVALID_COMMAND_FORMAT = "Invalid command format. Please see manual /start".freeze
   ERROR_MESSAGE = "Something went wrong or the document was not found. Please try again or use /start".freeze
 
   def call
     case message.text
     when '/start'
       send_message(bot, message, TELEBOT_HELP_MESSAGE)
-    when /^\/divide ([^\s]+) ([^\s]+)/
+    when /^\/divide[\t\s\r\n]+([^\s]+)[\t\s\r\n]+([^\s]+)/
       FormatService.perform(document_id: get_document_id($1), parts: $2.to_i)
       send_message(bot, message, "Done")
-    when /^\/divide ([^\s]+)/
+    when /^\/divide[\t\s\r\n]+([^\s]+)/
       FormatService.perform(document_id: get_document_id($1))
       send_message(bot, message, "Done")
-    when /^\/clear ([^\s]+)/
+    when /^\/clear[\t\s\r\n]+([^\s]+)/
       ClearService.perform(document_id: get_document_id($1))
       send_message(bot, message, "Cleared")
+    when /^\/divide/
+      send_message(bot, message, INVALID_COMMAND_FORMAT)
+    when /^\/clear/
+      send_message(bot, message, INVALID_COMMAND_FORMAT)
+    when /^\/take/
+      send_message(bot, message, INVALID_COMMAND_FORMAT)
+    when /^\/finish/
+      send_message(bot, message, INVALID_COMMAND_FORMAT)
     end
   rescue StandardError => error
     Rails.logger.info error
