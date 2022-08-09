@@ -23,6 +23,8 @@ class WipService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
+          next if element&.text_run&.content&.blank?
+
           if chunk_caption?(element)
             chunk_caption = element
             next
