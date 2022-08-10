@@ -10,6 +10,8 @@ class IncomingMessageService < ApplicationService
 
   def call
     send_message(bot, message, process_incoming_message)
+  rescue StandardError => error
+    Rails.logger.info error
   end
 
   private

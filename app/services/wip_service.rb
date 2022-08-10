@@ -51,7 +51,10 @@ class WipService < ApplicationService
     end
 
     result = "Chunk ##{params[:part]} was not found" if result.blank?
-    params[:part] ? result : "Available numbers are: #{available_chunks.join(', ')}"
+    availability_message = "Available numbers are: #{available_chunks.join(', ')}"
+    availability_message = "There are no chunks available" if available_chunks.blank?
+    result = "#{result}. #{availability_message}" if result == "Done"
+    params[:part] ? result : availability_message
   end
 
   private
