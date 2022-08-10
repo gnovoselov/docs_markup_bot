@@ -51,6 +51,7 @@ class WipService < ApplicationService
     end
 
     result = "Chunk ##{params[:part]} was not found" if result.blank?
+    available_chunks -= [params[:part]] if result == "Done"
     availability_message = "Available numbers are: #{available_chunks.join(', ')}"
     availability_message = "There are no chunks available" if available_chunks.blank?
     result = "#{result}. #{availability_message}" if result == "Done"
@@ -72,18 +73,18 @@ class WipService < ApplicationService
         create_chunk_mark(element, username).each do |request|
           requests << request
         end
+        return "Done"
       end
     else
       if caption.match?(wip_self)
         requests << remove_element(chunk_caption)
+        return "Finished"
       elsif matches = caption.match(WIP_OTHERS)
         return "You can not finish part taken by #{matches[1]}"
       else
         return "This part is not taken"
       end
     end
-
-    "Done"
   end
 
   def create_chunk_mark(element, username)
