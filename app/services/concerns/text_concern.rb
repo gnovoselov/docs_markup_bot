@@ -29,6 +29,17 @@ module TextConcern
     )
   end
 
+  def remove_text(text)
+    Google::Apis::DocsV1::Request.new(
+      replace_all_text: Google::Apis::DocsV1::ReplaceAllTextRequest.new(
+        replace_text: '',
+        contains_text: Google::Apis::DocsV1::SubstringMatchCriteria.new(
+          text: text
+        )
+      )
+    )
+  end
+
   def update_text_background(start_index, end_index, text_style)
     Google::Apis::DocsV1::Request.new(
       update_text_style: Google::Apis::DocsV1::UpdateTextStyleRequest.new(

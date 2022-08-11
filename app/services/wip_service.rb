@@ -5,19 +5,16 @@ class WipService < ApplicationService
   # - document_id: [String] Google document ID
   # - part: [Integer] Chunk index
   # - wip: [Boolean] Is the chunk in progress
-  # - user: [Telegram::User] User date consists of .first_name and .last_name
+  # - username: [String] User name
 
   include DocumentsApiConcern
   include TextConcern
-
-  WIP = "WIP".freeze
-  WIP_OTHERS = /^\s?\[#{WIP} ([^\]]+)\]/
+  include WipConcern
 
   def call
     chunk_index = 0
     colors = []
     available_chunks = []
-    username = params[:user] ? [params[:user].first_name, params[:user].last_name].compact.join(' ') : ''
     result = ''
     chunk_caption = nil
     change_document(params[:document_id]) do |document, structural_element, requests|
@@ -40,7 +37,7 @@ class WipService < ApplicationService
               available_chunks << chunk_index if chunk_caption.nil?
 
               if chunk_index == params[:part]
-                result = update_text(chunk_caption, element, username, requests)
+                result = update_text(chunk_caption, element, requests)
               end
 
               chunk_caption = nil
@@ -60,8 +57,8 @@ class WipService < ApplicationService
 
   private
 
-  def update_text(chunk_caption, element, username, requests)
-    wip_self = /^\s?\[#{WIP} #{username}\]\s?/
+  def update_text(chunk_caption, element, requests)
+    wip_self = /^\s?\[#{WIP} #{params[:username]}\]\s?/
     caption = chunk_caption&.text_run&.content || ''
 
     if params[:wip]
@@ -70,7 +67,7 @@ class WipService < ApplicationService
       elsif matches = caption.match(WIP_OTHERS)
         return "This part is already taken by #{matches[1]}"
       else
-        create_chunk_mark(element, username).each do |request|
+        create_chunk_mark(element).each do |request|
           requests << request
         end
         return "Done"
@@ -87,8 +84,8 @@ class WipService < ApplicationService
     end
   end
 
-  def create_chunk_mark(element, username)
-    caption = " [#{WIP} #{username}] "
+  def create_chunk_mark(element)
+    caption = get_wip_text(params[:username])
     text_style = {
       background_color: create_color(0, 0, 0),
       foreground_color: create_color(1, 1, 1),

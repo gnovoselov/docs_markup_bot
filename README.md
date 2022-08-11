@@ -1,19 +1,21 @@
 # Google Docs Divider
 
-This Telegram bot can accept a Google Doc link and divide the doc into several parts with different background.
+Этот бот может разбивать документ Google Doc на части, окрашивать их и назначать для работы разным пользователям.
 
-Possible commands:
+Возможные команды:
 
-- `/start` - print this manual
+- `/start` - выводит эту инструкцию
 
-- `/divide URL` - divide the Google Doc located at _URL_ into several parts (about half a page each)
+- `/help` - рассказывает о нашем алгоритме работы с документами
 
-- `/divide URL N` - divide the Google Doc located at _URL_ into _N_ parts
+- `/process URL` - стартует алгоритм обработки готового документа, находящегося по адресу _URL_
 
-- `/clear URL` - clear text backgrounds in the Google Doc located at _URL_
+- `/in` - первые 15 минут после старта работы над документом все желающие участвовать в переводе могут ответить этой командой, чтобы получить свой кусок документа
 
-- `/take URL N` - start working on the _Nth_ part of the Google doc located at _URL_ (adds a `[WIP _NAME_]` marker in the beginning of the part)
+- `/finish` - говорит боту, что вы закончили работу над своим куском текста
 
-- `/finish URL N` - finish working on the _Nth_ part of the Google doc located at _URL_ (removes all markers from the beginning of the part)
+- `/divide URL` - разделяет документ, находящийся по адресу _URL_, на несколько частей (около полстраницы каждая)
 
-- `/available URL` - show numbers for all available parts (without WIP markers in the beginning of the part)
+- `/divide URL N` - разделяет документ, находящийся по адресу _URL_, на _N_ частей
+
+- `/clear URL` - очищает фон в документе по адресу _URL_
