@@ -32,10 +32,9 @@ class FormatService < ApplicationService
         # puts "Current chunk: #{structural_element.end_index - last_index}"
         # puts "Next chunk: #{finish_index - structural_element.end_index}"
 
-        if (structural_element.end_index - last_index >= chunk_size - chunk_overlap) && (finish_index - structural_element.end_index > chunk_size * 0.6)
+        if (structural_element.end_index - last_index >= chunk_size - chunk_overlap) && (finish_index - structural_element.end_index > chunk_size * 0.5)
           # puts "[SWITCH]"
-          chunk_overlap = structural_element.end_index - last_index - chunk_size
-          chunk_overlap = 0 if chunk_overlap < 0
+          chunk_overlap += structural_element.end_index - last_index - chunk_size
           color_index += 1
           last_index = structural_element.end_index
         end
