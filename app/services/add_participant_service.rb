@@ -8,11 +8,11 @@ class AddParticipantService < ApplicationService
   include SemanticsConcern
 
   def call
-    return if !message || !chat || !document || document.active?
+    return if !message || !chat || !document || !document.pending?
 
     result = []
     if doc_participant.persisted?
-      "Вы уже участвуете в переводе этого документа. Нас #{load_participants_count}"
+      result << "Вы уже участвуете в переводе этого документа. Нас #{load_participants_count}"
     else
       doc_participant.save
       count = load_participants_count
