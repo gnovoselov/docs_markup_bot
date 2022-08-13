@@ -31,7 +31,7 @@ class FinishService < ApplicationService
         "#{express_joy}! В работе еще частей: #{count}"
       end
     else
-      "Вы не участвуете в переводе текущего документа"
+      "Вы не участвуете в переводе текущего документа или перевод уже завершен"
     end
   end
 
@@ -59,8 +59,8 @@ class FinishService < ApplicationService
 
   def doc_participant
     @doc_participant ||= DocumentParticipant.find_by(
-      document_id: document.id,
-      participant_id: participant.id
+      document_id: document&.id,
+      participant_id: participant&.id
     )
   end
 
