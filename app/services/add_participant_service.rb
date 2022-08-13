@@ -8,7 +8,7 @@ class AddParticipantService < ApplicationService
   include SemanticsConcern
 
   def call
-    return unless message && chat && document && not_enough_participants
+    return if !message || !chat || !document || document.active?
 
     result = []
     if doc_participant.persisted?
@@ -61,9 +61,5 @@ class AddParticipantService < ApplicationService
 
   def load_participants_count
     document.reload.participants.count
-  end
-
-  def not_enough_participants
-    document.max_participants > load_participants_count
   end
 end
