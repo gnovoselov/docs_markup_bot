@@ -2,14 +2,15 @@
 
 class StartMessageService < ApplicationService
   # @attr_reader params [Hash]
-  # - message: [Telegram::Bot::Types::Message] Incoming message
+  # - chat_id: [Integer] Telegram chat ID
+  # - document_id: [String] Google Docs ID
 
   include DocumentsApiConcern
 
   MIN_CHUNK_LENGTH = 700
 
   def call
-    return unless message && google_doc_link
+    return unless chat_id && document_id
 
     if document.persisted?
       return "Работа над документом завершена" if document.done?
@@ -27,10 +28,6 @@ class StartMessageService < ApplicationService
 
   private
 
-  def message
-    params[:message]
-  end
-
   def document_length
     length = document_object.body.content.last.end_index
     length = MIN_CHUNK_LENGTH if length < MIN_CHUNK_LENGTH
@@ -38,20 +35,22 @@ class StartMessageService < ApplicationService
   end
 
   def document_object
-    @document_object ||= get_document_object(document.document_id)
+    @document_object ||= get_document_object(document_id)
   end
 
   def chat
-    @chat ||= Chat.find_or_create_by id: message.chat.id
+    @chat ||= Chat.find_or_create_by id: chat_id
   end
 
   def document
-    @document ||= Document.find_or_initialize_by chat_id: chat.id, document_id: get_document_id(google_doc_link)
+    @document ||= Document.find_or_initialize_by chat_id: chat.id, document_id: document_id
   end
 
-  def google_doc_link
-    @google_doc_link ||= message.entities.select do |e|
-      e.type == 'text_link' && e.url.match?(GOOGLE_DOCS_URL)
-    end.first&.url
+  def chat_id
+    params[:chat_id]
+  end
+
+  def document_id
+    params[:document_id]
   end
 end

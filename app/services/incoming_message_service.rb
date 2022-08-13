@@ -37,7 +37,7 @@ class IncomingMessageService < ApplicationService
     when /^\/clear[\t\s\r\n]+([^\s]+)/
       ClearService.perform(document_id: get_document_id($1))
     when /^\/process[\t\s\r\n]+([^\s]+)/
-      StartMessageService.perform(message: message)
+      StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
     when /^\/finish/
       FinishService.perform(message: message)
     when /^\/in$/
