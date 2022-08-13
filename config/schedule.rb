@@ -1,3 +1,3 @@
 every :minute do
-  runner "DividerService.perform"
+  rake "divider:perform"
 end
