@@ -7,10 +7,12 @@ module DocumentsApiConcern
 
   include DocsAdapterConcern
 
+  GOOGLE_DOCS_URL = /^https:\/\/docs.google.com\/document\/d\/([^\/]+)/
+
   private
 
   def change_document(document_id)
-    document = docs_adapter.get_document document_id
+    document = get_document_object(document_id)
     requests = []
 
     document.body.content.each do |structural_element|
@@ -21,6 +23,17 @@ module DocumentsApiConcern
       request.requests = requests
       docs_adapter.batch_update_document(document.document_id, request)
     end
+  end
+
+  def get_document_object(document_id)
+    docs_adapter.get_document document_id
+  end
+
+  def get_document_id(url)
+    matches = url.match(GOOGLE_DOCS_URL)
+    return '' unless matches
+
+    matches[1]
   end
 
   def request

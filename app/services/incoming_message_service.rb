@@ -3,48 +3,51 @@
 class IncomingMessageService < ApplicationService
   # @attr_reader params [Hash]
   # - bot: [Telegram::Bot] Bot instance
-  # - message: [Telegram::Message] Incoming message
+  # - message: [Telegram::Bot::Types::Message] Incoming message
 
-  INVALID_COMMAND_FORMAT = "Invalid command format. Please see manual /start".freeze
-  ERROR_MESSAGE = "Something went wrong or the document was not found. Please try again or use /start".freeze
+  include DocumentsApiConcern
+
+  INVALID_COMMAND_FORMAT = "Неверный формат команды. Инструкцию можно вызвать командой /start".freeze
+  ERROR_MESSAGE = "Возникла ошибка или документ не найден. Попробуйте еще раз или нажмите /start".freeze
+  ALGORITHM_MESSAGE = "Кирилл присылает ссылку на документ, начиная свое сообщение командой /process, вот так:\n `/process https://docs.google.com/document/d/....`\n\nБот присылает в чат приветственное сообщение и приглашение к ответу. Мы все в течение 15 минут отвечаем на его сообщение командой. Вот так (со слешем вначале):\n\n/in\n\nПосле 15 минут бот подсчитает, количество плюсов, разделит текст и скажет об этом.\n\nКогда перевели, пишем:\n\n/finish\n\nКогда все куски готовы, бот уберет метки и фон и отправит сообщение Кириллу.".freeze
 
   def call
-    send_message(bot, message, process_incoming_message)
+    Array(process_incoming_message).each do |text|
+      next if text.blank?
+      send_message(bot, message, text)
+    end
   rescue StandardError => error
     Rails.logger.info error
   end
 
   private
 
-  def process_incoming_message()
+  def process_incoming_message
+    return unless message.respond_to?(:text)
+
     case message.text
     when '/start'
       TELEBOT_HELP_MESSAGE
+    when '/help'
+      ALGORITHM_MESSAGE
     when /^\/divide[\t\s\r\n]+([^\s]+)[\t\s\r\n]+([^\s]+)/
-      result = FormatService.perform(document_id: get_document_id($1), parts: $2.to_i)
+      FormatService.perform(document_id: get_document_id($1), parts: $2.to_i)
     when /^\/divide[\t\s\r\n]+([^\s]+)/
       FormatService.perform(document_id: get_document_id($1))
     when /^\/clear[\t\s\r\n]+([^\s]+)/
       ClearService.perform(document_id: get_document_id($1))
-    when /^\/take[\t\s\r\n]+([^\s]+)[\t\s\r\n]+([^\s]+)/
-      WipService.perform(document_id: get_document_id($1), part: $2.to_i, wip: true, user: message.from)
-    when /^\/finish[\t\s\r\n]+([^\s]+)[\t\s\r\n]+([^\s]+)/
-      WipService.perform(document_id: get_document_id($1), part: $2.to_i, user: message.from)
-    when /^\/available[\t\s\r\n]+([^\s]+)/
-      WipService.perform(document_id: get_document_id($1))
-    when /^\/divide/
-      INVALID_COMMAND_FORMAT
-    when /^\/clear/
-      INVALID_COMMAND_FORMAT
-    when /^\/take/
-      INVALID_COMMAND_FORMAT
+    when /^\/process[\t\s\r\n]+([^\s]+)/
+      StartMessageService.perform(message: message)
     when /^\/finish/
-      INVALID_COMMAND_FORMAT
-    when /^\/available/
+      FinishService.perform(message: message)
+    when /^\/in$/
+      AddParticipantService.perform(message: message)
+    when /^\/divide/, /^\/clear/, /^\/process/
       INVALID_COMMAND_FORMAT
     end
   rescue StandardError => error
     Rails.logger.info error
+    Rails.logger.info error.backtrace.join("\n")
     ERROR_MESSAGE
   end
 
@@ -52,14 +55,11 @@ class IncomingMessageService < ApplicationService
     bot.api.send_message(chat_id: message.chat.id, text: text)
   end
 
-  def get_document_id(url)
-    matches = url.match(/^https:\/\/docs.google.com\/document\/d\/([^\/]+)/)
-    return '' unless matches
-
-    matches[1]
+  def message
+    params[:message]
   end
 
-  def message; params[:message]; end
-
-  def bot; params[:bot]; end
+  def bot
+    params[:bot]
+  end
 end

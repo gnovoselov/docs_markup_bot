@@ -13,6 +13,7 @@ class FormatService < ApplicationService
   def call
     color_index = 1 # skipping white background
     last_index = 0
+    chunk_overlap = 0
     finish_index = nil
     chunk_size = nil
     change_document(params[:document_id]) do |document, structural_element, requests|
@@ -26,13 +27,14 @@ class FormatService < ApplicationService
         end
 
         # puts "Chunk size: #{chunk_size}"
-        # puts "Little chunk: #{chunk_size - 100}"
+        # puts "Little chunk: #{chunk_size - chunk_overlap}"
         # puts "Part chunk: #{chunk_size * 0.35}"
         # puts "Current chunk: #{structural_element.end_index - last_index}"
         # puts "Next chunk: #{finish_index - structural_element.end_index}"
 
-        if (structural_element.end_index - last_index >= chunk_size - 100) && (finish_index - structural_element.end_index > chunk_size * 0.6)
+        if (structural_element.end_index - last_index >= chunk_size - chunk_overlap) && (finish_index - structural_element.end_index > chunk_size * 0.6)
           # puts "[SWITCH]"
+          chunk_overlap = structural_element.end_index - last_index - chunk_size
           color_index += 1
           last_index = structural_element.end_index
         end
@@ -40,6 +42,6 @@ class FormatService < ApplicationService
       end
     end
 
-    "Done"
+    "Готово"
   end
 end

@@ -12,7 +12,7 @@ class ClearService < ApplicationService
       process_structural_element(document, structural_element, requests)
     end
 
-    "Cleared"
+    "Документ очищен от меток"
   end
 
   private

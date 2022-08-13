@@ -48,3 +48,4 @@ end
 
 gem "google-api-client"
 gem 'telegram-bot-ruby'
+gem 'whenever', require: false
