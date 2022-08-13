@@ -5,7 +5,6 @@ require 'telegram/bot'
 class DividerService < ApplicationService
 
   def call
-    Rails.logger.info "Divider is running"
     Document.pending.where('created_at < ?', 15.minutes.ago).each do |document|
       next if document.participants.count < 1
 
