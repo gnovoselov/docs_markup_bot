@@ -38,7 +38,7 @@ class IncomingMessageService < ApplicationService
       ClearService.perform(document_id: get_document_id($1))
     when /^\/process[\t\s\r\n]+([^\s]+)/
       StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
-    when /^\/finish/
+    when /^\/finish(@DocsDividerBot)?/
       FinishService.perform(message: message)
     when /^\/in(@DocsDividerBot)?$/
       AddParticipantService.perform(message: message)
