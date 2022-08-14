@@ -34,7 +34,7 @@ class DividerService < ApplicationService
     Telegram::Bot::Client.run(TELEBOT_CONFIG['token']) do |bot|
       bot.api.send_message(
         chat_id: document.chat_id,
-        text: "#{references.join(' ')} \nOK. Документ разделен на части! Можно приступать к переводу. По окончании нажмите, пожалуйста, /finish"
+        text: "#{references.join(' ')} \nOK. Документ разделен на части! Можно приступать к переводу.\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
       )
     end
   end

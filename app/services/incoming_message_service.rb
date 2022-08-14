@@ -40,8 +40,10 @@ class IncomingMessageService < ApplicationService
       StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
     when /^\/finish/
       FinishService.perform(message: message)
-    when /^\/in$/
+    when /^\/in(@DocsDividerBot)?$/
       AddParticipantService.perform(message: message)
+    when /^\/out$/
+      RemoveParticipantService.perform(message: message)
     when /^\/divide/, /^\/clear/, /^\/process/
       INVALID_COMMAND_FORMAT
     end
