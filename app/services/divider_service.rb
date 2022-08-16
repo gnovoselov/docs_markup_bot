@@ -10,12 +10,12 @@ class DividerService < ApplicationService
       next if participants < 1 ||
         (participants < document.optimal_participants && document.created_at < 25.minutes.ago)
 
-      document.active!
       divide_document(document)
     end
   end
 
   def divide_document(document)
+    document.active!
     FormatService.perform(
       document_id: document.document_id,
       parts: document.participants.count,
