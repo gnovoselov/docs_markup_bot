@@ -67,11 +67,15 @@ module TextConcern
   end
 
   def remove_element(element)
+    remove_range(element.start_index, element.end_index)
+  end
+
+  def remove_range(start_index, end_index)
     Google::Apis::DocsV1::Request.new(
       delete_content_range: Google::Apis::DocsV1::DeleteContentRangeRequest.new(
         range: Google::Apis::DocsV1::Range.new(
-          start_index: element.start_index,
-          end_index: element.end_index
+          start_index: start_index,
+          end_index: end_index
         )
       )
     )
