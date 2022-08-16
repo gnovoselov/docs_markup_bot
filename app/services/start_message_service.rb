@@ -8,7 +8,7 @@ class StartMessageService < ApplicationService
   include DocumentsApiConcern
 
   MIN_CHUNK_LENGTH = 700
-  OPTIMAL_CHUNK_LENGTH = 1600
+  OPTIMAL_CHUNK_LENGTH = 1350
 
   def call
     return unless chat_id && document_id
