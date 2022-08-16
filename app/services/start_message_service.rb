@@ -8,6 +8,7 @@ class StartMessageService < ApplicationService
   include DocumentsApiConcern
 
   MIN_CHUNK_LENGTH = 700
+  OPTIMAL_CHUNK_LENGTH = 1600
 
   def call
     return unless chat_id && document_id
@@ -21,6 +22,7 @@ class StartMessageService < ApplicationService
 
     chat.inactivate_all!
     document.max_participants = document_length / MIN_CHUNK_LENGTH
+    document.optimal_participants = document_length / OPTIMAL_CHUNK_LENGTH
     document.pending!
 
     "Друзья, у нас есть новый документ для перевода! \n\nКто участвует, нажмите, пожалуйста, /in"

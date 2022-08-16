@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_11_091057) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_16_203025) do
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_11_091057) do
     t.integer "max_participants"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "optimal_participants"
   end
 
   create_table "participants", force: :cascade do |t|

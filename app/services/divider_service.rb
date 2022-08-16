@@ -6,7 +6,9 @@ class DividerService < ApplicationService
 
   def call
     Document.pending.where('created_at < ?', 15.minutes.ago).each do |document|
-      next if document.participants.count < 1
+      participants = document.participants.count
+      next if participants < 1 ||
+        (participants < document.optimal_participants && document.created_at < 25.minutes.ago)
 
       document.active!
       divide_document(document)
