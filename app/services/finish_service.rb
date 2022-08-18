@@ -25,7 +25,7 @@ class FinishService < ApplicationService
                              .join(' ')
         [
           "#{references} \nСпасибо всем за работу!",
-          "@#{TELEGRAM_ADMIN} Можно проверять #{document.url}"
+          "@#{TELEGRAM_ADMIN} Перевод готов #{document.url}"
         ]
       else
         "#{express_joy}! В работе еще частей: #{count}"
