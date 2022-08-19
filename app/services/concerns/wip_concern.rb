@@ -13,4 +13,8 @@ module WipConcern
   def get_wip_text(username)
     " [#{WIP} #{username}] "
   end
+
+  def remove_non_ascii(text)
+    text.encode(Encoding.find('ASCII'), :invalid => :replace, :undef => :replace, :replace => '')
+  end
 end
