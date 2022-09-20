@@ -9,6 +9,7 @@ class StartMessageService < ApplicationService
 
   MIN_CHUNK_LENGTH = 700
   OPTIMAL_CHUNK_LENGTH = 1350
+  APPROXIMATE_PAGE_LENGTH = 2550
 
   def call
     return unless chat_id && document_id
@@ -18,17 +19,25 @@ class StartMessageService < ApplicationService
       return "Документ уже в работе"
     end
 
-    return "Этот документ пуст или недоступен!" if document_length == 0
+    length = document_length
+
+    return "Этот документ пуст или недоступен!" if length == 0
 
     chat.inactivate_all!
-    document.max_participants = document_length / MIN_CHUNK_LENGTH
-    document.optimal_participants = document_length / OPTIMAL_CHUNK_LENGTH
+    document.max_participants = length / MIN_CHUNK_LENGTH
+    document.optimal_participants = length / OPTIMAL_CHUNK_LENGTH
     document.pending!
 
-    "Друзья, у нас есть новый документ для перевода! \n\nКто участвует, нажмите, пожалуйста, /in"
+    "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in"
   end
 
   private
+
+  def document_pages(length)
+    pages = length / APPROXIMATE_PAGE_LENGTH.to_f
+    dec = pages - pages.to_i
+    dec >= 0.5 ? pages.ceil : pages.floor
+  end
 
   def document_length
     length = document_object.body.content.last.end_index
