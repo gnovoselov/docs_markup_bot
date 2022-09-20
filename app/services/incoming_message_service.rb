@@ -42,8 +42,8 @@ class IncomingMessageService < ApplicationService
       RestartDocumentService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
     when /^\/finish(@DocsDividerBot)?/
       FinishService.perform(message: message)
-    when /^\/in(@DocsDividerBot)?$/
-      AddParticipantService.perform(message: message)
+    when /^\/in(@DocsDividerBot)?[\t\s\r\n]*([^\s]+)?/
+      AddParticipantService.perform(message: message, parts: $2)
     when /^\/out$/
       RemoveParticipantService.perform(message: message)
     when /^\/divide/, /^\/clear/, /^\/process/

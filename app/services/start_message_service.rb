@@ -9,7 +9,7 @@ class StartMessageService < ApplicationService
 
   MIN_CHUNK_LENGTH = 700
   OPTIMAL_CHUNK_LENGTH = 1350
-  APPROXIMATE_PAGE_LENGTH = 2550
+  APPROXIMATE_PAGE_LENGTH = 2300
 
   def call
     return unless chat_id && document_id
@@ -28,7 +28,7 @@ class StartMessageService < ApplicationService
     document.optimal_participants = length / OPTIMAL_CHUNK_LENGTH
     document.pending!
 
-    "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in"
+    "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного"
   end
 
   private
@@ -36,7 +36,7 @@ class StartMessageService < ApplicationService
   def document_pages(length)
     pages = length / APPROXIMATE_PAGE_LENGTH.to_f
     dec = pages - pages.to_i
-    dec >= 0.5 ? pages.ceil : pages.floor
+    dec < 0.6 ? "#{pages.floor} с небольшим" : pages.floor
   end
 
   def document_length

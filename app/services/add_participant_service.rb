@@ -3,6 +3,7 @@
 class AddParticipantService < ApplicationService
   # @attr_reader params [Hash]
   # - message: [Telegram::Bot::Types::Message] Incoming message
+  # - parts: [Integer] How many parts to allocate to the participant
 
   include DocumentsApiConcern
   include SemanticsConcern
@@ -12,11 +13,11 @@ class AddParticipantService < ApplicationService
 
     result = []
     if doc_participant.persisted?
-      result << "Вы уже участвуете в переводе этого документа. Нас #{load_participants_count}"
+      result << "Вы уже участвуете в переводе этого документа. Нас #{load_parts_count}"
     else
-      doc_participant.save
-      count = load_participants_count
-      result << "#{express_joy}! Теперь нас #{count}"
+      doc_participant.update(parts: parts)
+      count = load_parts_count
+      result << "#{express_joy}! Делим на #{count}"
       if count >= document.max_participants
         result << "Всем спасибо! Для перевода этого документа уже достаточно добровольцев!"
         Thread.new { divider_service.divide_document(document) }
@@ -30,6 +31,10 @@ class AddParticipantService < ApplicationService
 
   def message
     params[:message]
+  end
+
+  def parts
+    params[:parts] || 1
   end
 
   def divider_service
@@ -59,7 +64,7 @@ class AddParticipantService < ApplicationService
     )
   end
 
-  def load_participants_count
-    document.reload.participants.count
+  def load_parts_count
+    document.reload.document_participants.sum(&:parts)
   end
 end

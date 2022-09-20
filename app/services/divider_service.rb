@@ -18,19 +18,22 @@ class DividerService < ApplicationService
     document.active!
     FormatService.perform(
       document_id: document.document_id,
-      parts: document.participants.count,
-      participants: document.participants
+      parts: document.document_participants.sum(&:parts)
     )
 
     references = []
-    document.participants.each_with_index do |participant, i|
+    part = 0
+    document.document_participants.each do |doc_participant|
+      participant = doc_participant.participant
       references << "@#{participant.username}" if participant.username.present?
-      WipService.perform(
-        document_id: document.document_id,
-        part: i + 1,
-        wip: true,
-        username: participant.full_name
-      )
+      doc_participant.parts.times do |i|
+        WipService.perform(
+          document_id: document.document_id,
+          part: part + i + 1,
+          username: participant.full_name
+        )
+      end
+      part += doc_participant.parts
     end
 
     Telegram::Bot::Client.run(TELEBOT_CONFIG['token']) do |bot|

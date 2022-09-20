@@ -18,8 +18,7 @@ class RestartDocumentService < ApplicationService
       end
     end
 
-    document.document_participants.destroy_all
-    document.inactive!
+    document.destroy
 
     StartMessageService.perform(chat_id: chat.id, document_id: document_id)
   end

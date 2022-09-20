@@ -65,6 +65,6 @@ class FinishService < ApplicationService
   end
 
   def load_participants_count
-    document.reload.document_participants.active.count
+    document.reload.document_participants.active.sum(&:parts)
   end
 end

@@ -4,7 +4,6 @@ class WipService < ApplicationService
   # @attr_reader params [Hash]
   # - document_id: [String] Google document ID
   # - part: [Integer] Chunk index
-  # - wip: [Boolean] Is the chunk in progress
   # - username: [String] User name
 
   include DocumentsApiConcern
@@ -14,18 +13,10 @@ class WipService < ApplicationService
   def call
     chunk_index = 0
     colors = []
-    available_chunks = []
-    result = ''
-    chunk_caption = nil
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
-          next if element&.text_run&.content&.blank?
-
-          if chunk_caption?(element)
-            chunk_caption = element
-            next
-          end
+          next if element&.text_run&.content&.blank? || chunk_caption?(element)
 
           bg = element.text_run.text_style.background_color
           if bg
@@ -34,53 +25,24 @@ class WipService < ApplicationService
             unless colors.include?(color)
               chunk_index += 1
               colors << color
-              available_chunks << chunk_index if chunk_caption.nil?
 
               if chunk_index == params[:part]
-                result = update_text(chunk_caption, element, requests)
+                update_text(element, requests)
               end
-
-              chunk_caption = nil
             end
           end
         end
       end
     end
 
-    result = "Chunk ##{params[:part]} was not found" if result.blank?
-    available_chunks -= [params[:part]] if result == "Done"
-    availability_message = "Available numbers are: #{available_chunks.join(', ')}"
-    availability_message = "There are no chunks available" if available_chunks.blank?
-    result = "#{result}. #{availability_message}" if result == "Done"
-    params[:part] ? result : availability_message
+    'Done'
   end
 
   private
 
-  def update_text(chunk_caption, element, requests)
-    wip_self = /^\s?\[#{WIP} #{params[:username]}\]\s?/
-    caption = chunk_caption&.text_run&.content || ''
-
-    if params[:wip]
-      if caption.match?(wip_self)
-        return "This part is already taken by you"
-      elsif matches = caption.match(WIP_OTHERS)
-        return "This part is already taken by #{matches[1]}"
-      else
-        create_chunk_mark(element).each do |request|
-          requests << request
-        end
-        return "Done"
-      end
-    else
-      if caption.match?(wip_self)
-        requests << remove_element(chunk_caption)
-        return "Finished"
-      elsif matches = caption.match(WIP_OTHERS)
-        return "You can not finish part taken by #{matches[1]}"
-      else
-        return "This part is not taken"
-      end
+  def update_text(element, requests)
+    create_chunk_mark(element).each do |request|
+      requests << request
     end
   end
 
