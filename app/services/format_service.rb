@@ -19,7 +19,7 @@ class FormatService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         finish_index ||= document.body.content.last.end_index
-        chunk_size ||= params[:parts] ? (finish_index / params[:parts]).round : DEFAULT_CHUNK_SIZE
+        chunk_size ||= param_parts ? (finish_index / param_parts).round : DEFAULT_CHUNK_SIZE
 
         structural_element.paragraph.elements.each do |element|
           # puts element.text_run.content
@@ -32,7 +32,7 @@ class FormatService < ApplicationService
         # puts "Current chunk: #{structural_element.end_index - last_index}"
         # puts "Next chunk: #{finish_index - structural_element.end_index}"
 
-        if (structural_element.end_index - last_index >= chunk_size - chunk_overlap) && (finish_index - structural_element.end_index > chunk_size * 0.5)
+        if (structural_element.end_index - last_index >= chunk_size - chunk_overlap) && (finish_index - structural_element.end_index > chunk_size * 0.5 || param_parts - color_index > 0)
           # puts "[SWITCH]"
           chunk_overlap += structural_element.end_index - last_index - chunk_size
           color_index += 1
@@ -43,5 +43,11 @@ class FormatService < ApplicationService
     end
 
     "Готово"
+  end
+
+  private
+
+  def param_parts
+    params[:parts]
   end
 end
