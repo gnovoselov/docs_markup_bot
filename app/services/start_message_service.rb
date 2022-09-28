@@ -4,6 +4,7 @@ class StartMessageService < ApplicationService
   # @attr_reader params [Hash]
   # - chat_id: [Integer] Telegram chat ID
   # - document_id: [String] Google Docs ID
+  # - message_id: [String] Telegram Message ID
 
   include DocumentsApiConcern
 
@@ -28,6 +29,17 @@ class StartMessageService < ApplicationService
     document.max_participants = length / MIN_CHUNK_LENGTH
     document.optimal_participants = length / OPTIMAL_CHUNK_LENGTH
     document.pending!
+
+    notifications = []
+    chat.participants.find_each do |participant|
+      participant.subscriptions.each do |subscription|
+        notifications << {
+          text: "У нас есть новый документ для перевода: https://t.me/csources/#{params[:message_id]}",
+          chat_id: subscription.chat_id
+        }
+      end
+    end
+    Thread.new { NotificationsService.perform(notifications: notifications) }
 
     result << "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного"
 

@@ -36,11 +36,19 @@ class DividerService < ApplicationService
       part += doc_participant.parts
     end
 
-    Telegram::Bot::Client.run(TELEBOT_CONFIG['token']) do |bot|
-      bot.api.send_message(
-        chat_id: document.chat_id,
-        text: "#{references.join(' ')} \nOK. Документ разделен на части! Можно приступать к переводу.\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
-      )
+    notifications = [{
+      chat_id: document.chat_id,
+      text: "#{references.join(' ')} \nOK. Документ разделен на части! Можно приступать к переводу.\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
+    }]
+
+    document.chat.participants.find_each do |participant|
+      participant.subscriptions.each do |subscription|
+        notifications << {
+          text: "У нас есть новый документ для перевода: https://t.me/csources/#{params[:message_id]}",
+          chat_id: subscription.chat_id
+        }
+      end
     end
+    NotificationsService.perform(notifications: notifications)
   end
 end

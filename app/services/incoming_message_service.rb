@@ -37,9 +37,9 @@ class IncomingMessageService < ApplicationService
     when /^\/clear[\t\s\r\n]+([^\s]+)/
       ClearService.perform(document_id: get_document_id($1))
     when /^\/process[\t\s\r\n]+([^\s]+)/
-      StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
+      StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1), message_id: message.id)
     when /^\/restart[\t\s\r\n]+([^\s]+)/
-      RestartDocumentService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
+      RestartDocumentService.perform(chat_id: message.chat.id, document_id: get_document_id($1), message_id: message.id)
     when /^\/finish(@DocsDividerBot)?/
       FinishService.perform(message: message)
     when /^\/in(@DocsDividerBot)?[\t\s\r\n]*([^\s]+)?/
@@ -50,6 +50,10 @@ class IncomingMessageService < ApplicationService
       TakeService.perform(message: message)
     when /^\/wait[\t\s\r\n]*([^\s]+)?/
       WaitService.perform(message: message, parts: $1)
+    when /^\/subscribe$/
+      SubscribeService.perform(message: message)
+    when /^\/unsubscribe$/
+      UnsubscribeService.perform(message: message)
     when /^\/out$/
       RemoveParticipantService.perform(message: message)
     when /^\/divide/, /^\/clear/, /^\/process/
