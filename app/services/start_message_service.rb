@@ -23,12 +23,27 @@ class StartMessageService < ApplicationService
 
     return "Этот документ пуст или недоступен!" if length == 0
 
+    result = []
     chat.inactivate_all!
     document.max_participants = length / MIN_CHUNK_LENGTH
     document.optimal_participants = length / OPTIMAL_CHUNK_LENGTH
     document.pending!
 
-    "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного"
+    result << "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного"
+
+    chat.waiters.find_each do |waiter|
+      doc_participant = DocumentParticipant.create(
+        document_id: document.id,
+        participant_id: waiter.participant_id,
+        parts: waiter.parts
+      )
+      reference = ''
+      reference = "@#{waiter.participant.username} " if waiter.participant.username
+      result << "#{reference}#{waiter.participant.full_name}, вам назначено частей: #{waiter.parts}"
+      waiter.destroy
+    end
+
+    result
   end
 
   private
@@ -63,5 +78,9 @@ class StartMessageService < ApplicationService
 
   def document_id
     params[:document_id]
+  end
+
+  def add_participant_service
+    AddParticipantService
   end
 end
