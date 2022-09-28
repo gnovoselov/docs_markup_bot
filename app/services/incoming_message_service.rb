@@ -67,6 +67,14 @@ class IncomingMessageService < ApplicationService
 
   def send_message(bot, message, text)
     bot.api.send_message(chat_id: message.chat.id, text: text)
+  # rescue Telegram::Bot::Exceptions::ResponseError => e
+    # root@GoogleDocsDivider:~/docs_markup_bot# bin/rake telebot:run RAILS_ENV=production
+    # rake aborted!
+    # Telegram::Bot::Exceptions::ResponseError: Telegram API has returned the error. (ok: "false", error_code: "429", description: "Too Many Requests: retry after 5", parameters: "{"retry_after"=>5}")
+    # /root/docs_markup_bot/lib/tasks/telebot.rake:8:in `block (3 levels) in <main>'
+    # /root/docs_markup_bot/lib/tasks/telebot.rake:7:in `block (2 levels) in <main>'
+    # Tasks: TOP => telebot:run
+    # (See full trace by running task with --trace)
   end
 
   def message
