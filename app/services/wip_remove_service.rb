@@ -19,7 +19,7 @@ class WipRemoveService < ApplicationService
 
           if /[\s\t]*#{Regexp.escape(remove_non_ascii(wip_text).strip)}[\s\t]*/.match?(remove_non_ascii(element.text_run.content))
             requests << remove_range(element.start_index - dept, element.end_index - dept)
-            dept += wip_text.length
+            dept += element.end_index - element.start_index
           end
         end
       end

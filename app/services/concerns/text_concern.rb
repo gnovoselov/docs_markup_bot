@@ -18,11 +18,11 @@ module TextConcern
     )
   end
 
-  def insert_text_before(element, content)
+  def insert_text_before(start_index, content)
     Google::Apis::DocsV1::Request.new(
       insert_text: Google::Apis::DocsV1::InsertTextRequest.new(
         location: Google::Apis::DocsV1::Location.new(
-          index: element.start_index
+          index: start_index
         ),
         text: content
       )

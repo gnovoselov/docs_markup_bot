@@ -13,7 +13,8 @@ class AddParticipantService < ApplicationService
 
     result = []
     if doc_participant.persisted?
-      result << "Вы уже участвуете в переводе этого документа. Нас #{load_parts_count}"
+      doc_participant.update(parts: parts)
+      result << "Вы уже участвуете в переводе этого документа. У вас #{parts} частей"
     else
       doc_participant.update(parts: parts)
       count = load_parts_count

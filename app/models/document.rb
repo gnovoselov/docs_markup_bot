@@ -2,6 +2,7 @@ class Document < ApplicationRecord
   belongs_to :chat
   has_many :document_participants, dependent: :delete_all
   has_many :participants, through: :document_participants
+  has_many :shares
 
   enum status: %i[inactive pending active done]
 

@@ -55,7 +55,7 @@ class WipService < ApplicationService
     }
 
     [
-      insert_text_before(element, caption),
+      insert_text_before(element.start_index, caption),
       update_text_style(element.start_index, element.start_index + caption.size, text_style)
     ]
   end

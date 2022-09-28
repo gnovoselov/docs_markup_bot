@@ -44,6 +44,10 @@ class IncomingMessageService < ApplicationService
       FinishService.perform(message: message)
     when /^\/in(@DocsDividerBot)?[\t\s\r\n]*([^\s]+)?/
       AddParticipantService.perform(message: message, parts: $2)
+    when /^\/share[\t\s\r\n]*([^\s]+)?/
+      ShareService.perform(message: message, part: $1)
+    when /^\/take(@DocsDividerBot)?/
+      TakeService.perform(message: message)
     when /^\/out$/
       RemoveParticipantService.perform(message: message)
     when /^\/divide/, /^\/clear/, /^\/process/
