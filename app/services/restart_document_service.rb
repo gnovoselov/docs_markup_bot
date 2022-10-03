@@ -4,7 +4,6 @@ class RestartDocumentService < ApplicationService
   # @attr_reader params [Hash]
   # - chat_id: [Integer] Telegram chat ID
   # - document_id: [String] Google Docs ID
-  # - message_id: [String] Telegram Message ID
 
   def call
     return unless chat_id && document_id
@@ -21,7 +20,7 @@ class RestartDocumentService < ApplicationService
 
     document.destroy
 
-    StartMessageService.perform(chat_id: chat.id, document_id: document_id, message_id: params[:message_id])
+    StartMessageService.perform(chat_id: chat.id, document_id: document_id)
   end
 
   private

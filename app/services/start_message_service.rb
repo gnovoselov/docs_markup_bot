@@ -4,7 +4,6 @@ class StartMessageService < ApplicationService
   # @attr_reader params [Hash]
   # - chat_id: [Integer] Telegram chat ID
   # - document_id: [String] Google Docs ID
-  # - message_id: [String] Telegram Message ID
 
   include DocumentsApiConcern
 
@@ -34,7 +33,7 @@ class StartMessageService < ApplicationService
     chat.participants.find_each do |participant|
       participant.subscriptions.each do |subscription|
         notifications << {
-          text: "У нас есть новый документ для перевода: #{TELEGRAM_CHAT_URL}/#{params[:message_id]}",
+          text: "У нас есть новый документ для перевода: #{TELEGRAM_CHAT_URL}",
           chat_id: subscription.chat_id
         }
       end
