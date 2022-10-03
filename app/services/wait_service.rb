@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddParticipantService < ApplicationService
+class WaitService < ApplicationService
   # @attr_reader params [Hash]
   # - message: [Telegram::Bot::Types::Message] Incoming message
   # - parts: [Integer] How many parts to allocate to the participant
@@ -33,7 +33,7 @@ class AddParticipantService < ApplicationService
   end
 
   def chat
-    @chat ||= Chat.find_by id: message.chat.id
+    @chat ||= Chat.find_or_create_by id: message.chat.id
   end
 
   def participant

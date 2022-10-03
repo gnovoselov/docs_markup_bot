@@ -34,12 +34,12 @@ class StartMessageService < ApplicationService
     chat.participants.find_each do |participant|
       participant.subscriptions.each do |subscription|
         notifications << {
-          text: "У нас есть новый документ для перевода: https://t.me/csources/#{params[:message_id]}",
+          text: "У нас есть новый документ для перевода: #{TELEGRAM_CHAT_URL}/#{params[:message_id]}",
           chat_id: subscription.chat_id
         }
       end
     end
-    Thread.new { NotificationsService.perform(notifications: notifications) }
+    NotificationsService.perform(notifications: notifications)
 
     result << "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного"
 

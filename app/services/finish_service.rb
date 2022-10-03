@@ -13,6 +13,7 @@ class FinishService < ApplicationService
         username: participant.full_name
       )
 
+      participant.shares.where(document_id: document.id).delete_all
       doc_participant.inactive!
       count = load_participants_count
       if count < 1
@@ -50,7 +51,7 @@ class FinishService < ApplicationService
   end
 
   def participant
-    @participant ||= document&.participants.find_by(
+    @participant ||= document&.participants&.find_by(
       first_name: message.from.first_name,
       last_name: message.from.last_name,
       username: message.from.username

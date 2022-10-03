@@ -16,6 +16,7 @@ class WipReplaceService < ApplicationService
     new_wip_text = get_wip_text(params[:to])
     dept = 0
     count = 0
+    changed = 0
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
@@ -24,7 +25,8 @@ class WipReplaceService < ApplicationService
           if /[\s\t]*#{Regexp.escape(remove_non_ascii(old_wip_text).strip)}[\s\t]*/.match?(remove_non_ascii(element.text_run.content))
             count += 1
             if part == 0 || part == count
-              requests << insert_text_before(element.start_index + dept, content)
+              changed += 1
+              requests << insert_text_before(element.start_index + dept, new_wip_text)
               dept += new_wip_text.length
               requests << remove_range(element.start_index + dept, element.end_index + dept)
               dept -= element.end_index - element.start_index
@@ -33,6 +35,7 @@ class WipReplaceService < ApplicationService
         end
       end
     end
+    changed
   end
 
   private

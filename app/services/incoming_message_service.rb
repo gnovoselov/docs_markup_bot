@@ -9,7 +9,7 @@ class IncomingMessageService < ApplicationService
 
   INVALID_COMMAND_FORMAT = "Неверный формат команды. Инструкцию можно вызвать командой /start".freeze
   ERROR_MESSAGE = "Возникла ошибка или документ не найден. Попробуйте еще раз или нажмите /start".freeze
-  ALGORITHM_MESSAGE = "Кирилл присылает ссылку на документ, начиная свое сообщение командой /process, вот так:\n `/process https://docs.google.com/document/d/....`\n\nБот присылает в чат приветственное сообщение и приглашение к ответу. Мы все в течение 15-35 минут отвечаем на его сообщение командой. Вот так (со слешем вначале):\n\n/in\n\nПосле 15 минут бот подсчитает, количество желающих, разделит текст и скажет об этом.\n\nКогда перевели, пишем:\n\n/finish\n\nКогда все куски готовы, бот уберет метки и фон и отправит сообщение Кириллу. Кирилл поправит ошибки и напишет в чат, когда можно смотреть его правки. Эти правки после просмотра необходимо принять.\n\nНаш глоссарий и правила, которыми мы руководствуемся при переводе, находятся по адресу https://docs.google.com/spreadsheets/d/1SMHIkMDnIbtmJMNrvxk6lMGMkG81IiVk48mJzG3VnGQ/edit?usp=sharing \n(там надо потыкать по вкладочкам). \nМы вносим туда часто встречающиеся термины, которые надо обычно перепроверять через википедию или переводить с использованием чего-то специального типа постановления правительства о транслитерации, а также вещи, которые переводятся по разному, но с которыми нам надо соблюдать единообразие. Уже опубликованные сводки можно найти тут: https://notes.citeam.org/".freeze
+  ALGORITHM_MESSAGE = "Кирилл присылает ссылку на документ, начиная свое сообщение командой /process, вот так:\n `/process https://docs.google.com/document/d/....`\n\nБот присылает в чат приветственное сообщение и приглашение к ответу. Мы все в течение 15-35 минут отвечаем на его сообщение командой. Вот так (со слешем вначале):\n\n/in\n\nПосле самое большее 35 минут бот подсчитает, количество желающих, разделит текст и скажет об этом.\n\nКогда перевели, пишем:\n\n/finish\n\nКогда все куски готовы, бот уберет метки и фон и отправит сообщение Кириллу. Кирилл поправит ошибки и напишет в чат, когда можно смотреть его правки. Эти правки после просмотра необходимо принять.\n\nНаш глоссарий и правила, которыми мы руководствуемся при переводе, находятся по адресу https://docs.google.com/spreadsheets/d/1SMHIkMDnIbtmJMNrvxk6lMGMkG81IiVk48mJzG3VnGQ/edit?usp=sharing \n(там надо потыкать по вкладочкам). \nМы вносим туда часто встречающиеся термины, которые надо обычно перепроверять через википедию или переводить с использованием чего-то специального типа постановления правительства о транслитерации, а также вещи, которые переводятся по разному, но с которыми нам надо соблюдать единообразие.\n\nУже опубликованные сводки можно найти тут: https://notes.citeam.org/".freeze
 
   def call
     Array(process_incoming_message).each do |text|
@@ -37,15 +37,15 @@ class IncomingMessageService < ApplicationService
     when /^\/clear[\t\s\r\n]+([^\s]+)/
       ClearService.perform(document_id: get_document_id($1))
     when /^\/process[\t\s\r\n]+([^\s]+)/
-      StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1), message_id: message.id)
+      StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1), message_id: message.message_id)
     when /^\/restart[\t\s\r\n]+([^\s]+)/
-      RestartDocumentService.perform(chat_id: message.chat.id, document_id: get_document_id($1), message_id: message.id)
+      RestartDocumentService.perform(chat_id: message.chat.id, document_id: get_document_id($1), message_id: message.message_id)
     when /^\/finish(@DocsDividerBot)?/
       FinishService.perform(message: message)
     when /^\/in(@DocsDividerBot)?[\t\s\r\n]*([^\s]+)?/
       AddParticipantService.perform(message: message, parts: $2)
     when /^\/share[\t\s\r\n]*([^\s]+)?/
-      ShareService.perform(message: message, part: $1)
+      ShareService.perform(message: message, part: $1.to_i)
     when /^\/take(@DocsDividerBot)?/
       TakeService.perform(message: message)
     when /^\/wait[\t\s\r\n]*([^\s]+)?/

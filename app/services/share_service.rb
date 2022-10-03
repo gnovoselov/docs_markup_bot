@@ -27,10 +27,22 @@ class ShareService < ApplicationService
     left_parts = part == 0 ? 0 : doc_participant.parts - 1
 
     if left_parts == 0
+      doc_participant.parts = left_parts
       doc_participant.inactive!
     else
       doc_participant.update(parts: left_parts)
     end
+
+    notifications = []
+    chat.participants.find_each do |participant|
+      participant.subscriptions.each do |subscription|
+        notifications << {
+          text: "Кому-то нужна ваша помощь в переводе. Загляните, пожалуйста, в чат, если можете взять дополнительную работу: #{TELEGRAM_CHAT_URL}",
+          chat_id: subscription.chat_id
+        }
+      end
+    end
+    NotificationsService.perform(notifications: notifications)
 
     "Друзья, нужна помощь! Кто может взять в работу дополнительный кусок, нажмите, пожалуйста, /take"
   end

@@ -27,7 +27,7 @@ class TakeService < ApplicationService
     doc_participant.active!
     share.destroy
 
-    "Спасибо за помощь! Вам назначен дополнительный кусок. Теперь у вас их #{doc_participant.parts}"
+    "Спасибо за помощь! Вам назначена дополнительная работа. Теперь у вас частей: #{doc_participant.parts}"
   end
 
   private
@@ -60,9 +60,6 @@ class TakeService < ApplicationService
   end
 
   def share
-    @share ||= Share.find_by(
-      document_id: document.id,
-      participant_id: participant.id
-    )
+    @share ||= Share.find_by(document_id: document.id)
   end
 end

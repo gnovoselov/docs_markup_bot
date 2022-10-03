@@ -5,6 +5,8 @@ class UnsubscribeService < ApplicationService
   # - message: [Telegram::Bot::Types::Message] Incoming message
 
   def call
+    return "Это сообщение должно быть отправлено боту В ЛИЧКУ" if chat.participants.uniq.count > 1
+
     return "Вы не подписаны на оповещения" unless subscription
 
     subscription.destroy

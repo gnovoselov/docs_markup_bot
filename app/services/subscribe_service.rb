@@ -7,7 +7,7 @@ class SubscribeService < ApplicationService
   def call
     return "Вы уже подписаны на оповещения" if subscription.persisted?
 
-    return "Это сообщение должне быть отправлено боту В ЛИЧКУ" if chat.particiants.uniq.count > 1
+    return "Это сообщение должно быть отправлено боту В ЛИЧКУ" if chat.participants.uniq.count > 1
 
     subscription.save
 

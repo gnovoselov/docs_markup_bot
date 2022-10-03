@@ -44,7 +44,7 @@ class DividerService < ApplicationService
     document.chat.participants.find_each do |participant|
       participant.subscriptions.each do |subscription|
         notifications << {
-          text: "У нас есть новый документ для перевода: https://t.me/csources/#{params[:message_id]}",
+          text: "Документ разделен на части. Можно приступать: #{TELEGRAM_CHAT_URL}",
           chat_id: subscription.chat_id
         }
       end

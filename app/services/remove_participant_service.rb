@@ -13,9 +13,9 @@ class RemoveParticipantService < ApplicationService
     result = []
     if doc_participant.persisted?
       doc_participant.destroy
-      "Вы больше не участвуете в переводе этого документа. Нас #{load_participants_count}"
+      "Вы больше не участвуете в переводе этого документа. Сейчас добровольцев: #{load_participants_count}"
     else
-      "Вы не участвуете в переводе этого документа. Нас #{load_participants_count}"
+      "Вы не участвуете в переводе этого документа. Сейчас добровольцев: #{load_participants_count}"
     end
   end
 
