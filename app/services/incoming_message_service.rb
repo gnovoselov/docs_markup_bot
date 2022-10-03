@@ -17,7 +17,7 @@ class IncomingMessageService < ApplicationService
       send_message(bot, message, text)
     end
   rescue StandardError => error
-    Rails.logger.info error
+    Rails.logger.error error
   end
 
   private
