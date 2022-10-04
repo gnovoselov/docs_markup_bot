@@ -9,9 +9,9 @@ class StatusService < ApplicationService
   def call
     case document.status
     when 'pending'
-      "Набираем волонтеров для перевода текущего документа. Страниц в нем примерно #{pages}. Пока делим на #{total_parts} частей. #{pending_participant_status}"
+      "Набираем волонтеров для перевода текущего документа. Страниц в нем примерно #{pages}. Пока делим на #{total_parts} частей.\n#{pending_participant_status}"
     when 'active'
-      "Перевод документа в процессе. Он разделен на #{total_parts} частей. В работе еще #{in_progress_parts}. #{participant_status}"
+      "Перевод документа в процессе. Он разделен на #{total_parts} частей. В работе еще #{in_progress_parts}.\n#{participant_status}"
     else
       "Сейчас никаких переводов не ведется. Вы можете записаться на перевод следующего документа командой /wait#{waiters_status}"
     end
