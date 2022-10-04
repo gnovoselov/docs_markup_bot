@@ -13,7 +13,7 @@ class StatusService < ApplicationService
     when :active
       "Перевод документа в процессе. Он разделен на #{total_parts} частей. В работе еще #{in_progress_parts}. #{participant_status}"
     else
-      "Сейчас никаких переводов не ведется. Вы можете записаться на перевод следующего документа командой /wait"
+      "Сейчас никаких переводов не ведется. Вы можете записаться на перевод следующего документа командой /wait\nУже есть заявки на #{waiters_count} частей."
     end
   end
 
@@ -34,6 +34,10 @@ class StatusService < ApplicationService
     else
       "Вы участвуете в переводе. У вас в работе частей: #{doc_participant.parts}"
     end
+  end
+
+  def waiters_count
+    @waiters_count ||= chat.waiters.sum(&:parts)
   end
 
   def pages
