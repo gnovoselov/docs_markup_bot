@@ -41,7 +41,11 @@ class DividerService < ApplicationService
       text: "#{references.join(' ')} \nOK. Документ разделен на части! Можно приступать к переводу.\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
     }]
 
+    participant_ids = document.participants.map(&:id)
+
     document.chat.participants.find_each do |participant|
+      next unless participant_ids.include?(participant.id)
+
       participant.subscriptions.each do |subscription|
         notifications << {
           text: "Документ разделен на части. Можно приступать: #{TELEGRAM_CHAT_URL}",
