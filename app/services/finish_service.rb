@@ -4,6 +4,7 @@ class FinishService < ApplicationService
   # @attr_reader params [Hash]
   # - message: [Telegram::Bot::Types::Message] Incoming message
 
+  include DocumentsApiConcern
   include SemanticsConcern
 
   def call
@@ -15,7 +16,7 @@ class FinishService < ApplicationService
 
       participant.shares.where(document_id: document.id).delete_all
       doc_participant.inactive!
-      count = load_participants_count
+      count = load_participants_count(document)
       if count < 1
         ClearService.perform(document_id: document&.document_id)
         document.done!
@@ -69,9 +70,5 @@ class FinishService < ApplicationService
       document_id: document&.id,
       participant_id: participant&.id
     )
-  end
-
-  def load_participants_count
-    document.reload.document_participants.active.sum(&:parts)
   end
 end

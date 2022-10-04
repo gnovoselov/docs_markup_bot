@@ -19,7 +19,7 @@ class StartMessageService < ApplicationService
       return "Документ уже в работе"
     end
 
-    length = document_length
+    length = document_length(document_object)
 
     return "Этот документ пуст или недоступен!" if length == 0
 
@@ -60,28 +60,16 @@ class StartMessageService < ApplicationService
 
   private
 
-  def document_pages(length)
-    pages = length / APPROXIMATE_PAGE_LENGTH.to_f
-    dec = pages - pages.to_i
-    dec < 0.6 ? "#{pages.floor} с небольшим" : pages.floor
-  end
-
-  def document_length
-    length = document_object.body.content.last.end_index
-    length = MIN_CHUNK_LENGTH if length < MIN_CHUNK_LENGTH
-    length
-  end
-
-  def document_object
-    @document_object ||= get_document_object(document_id)
-  end
-
   def chat
     @chat ||= Chat.find_or_create_by id: chat_id
   end
 
   def document
     @document ||= Document.find_or_initialize_by chat_id: chat.id, document_id: document_id
+  end
+
+  def document_object
+    @document_object ||= get_document_object(document_id)
   end
 
   def chat_id

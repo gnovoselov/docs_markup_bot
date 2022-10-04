@@ -50,6 +50,8 @@ class IncomingMessageService < ApplicationService
       TakeService.perform(message: message)
     when /^\/wait[\t\s\r\n]*([^\s]+)?/
       WaitService.perform(message: message, parts: $1)
+    when /^\/status$/
+      StatusService.perform(message: message)
     when /^\/subscribe$/
       SubscribeService.perform(message: message)
     when /^\/unsubscribe$/

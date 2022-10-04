@@ -17,7 +17,7 @@ class AddParticipantService < ApplicationService
       result << "Вы уже участвуете в переводе этого документа. Всего у вас частей: #{parts}"
     else
       doc_participant.update(parts: parts)
-      count = load_parts_count
+      count = load_parts_count(document)
       result << "#{express_joy}! Делим на #{count}"
       if count >= document.max_participants
         result << "Всем спасибо! Для перевода этого документа уже достаточно добровольцев!"
@@ -63,9 +63,5 @@ class AddParticipantService < ApplicationService
       document_id: document.id,
       participant_id: participant.id
     )
-  end
-
-  def load_parts_count
-    document.reload.document_participants.sum(&:parts)
   end
 end
