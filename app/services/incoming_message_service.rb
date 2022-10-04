@@ -40,7 +40,7 @@ class IncomingMessageService < ApplicationService
       StartMessageService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
     when /^\/restart[\t\s\r\n]+([^\s]+)/
       RestartDocumentService.perform(chat_id: message.chat.id, document_id: get_document_id($1))
-    when /^\/Answer to the Ultimate Question/
+    when /^\/Answer to the Ultimate Question/i
       '42'
     when /^\/finish(@DocsDividerBot)?/
       FinishService.perform(message: message)
