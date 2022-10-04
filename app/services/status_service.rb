@@ -9,30 +9,30 @@ class StatusService < ApplicationService
   def call
     case document.status
     when 'pending'
-      "Набираем волонтеров для перевода текущего документа. Страниц в нем примерно #{pages}. Пока делим на #{total_parts} частей.\n#{pending_participant_status}"
+      "Набираем волонтеров для перевода текущего документа.\nСтраниц в нем примерно #{pages}.\nПока делим на #{total_parts} частей.\n#{pending_participant_status}"
     when 'active'
-      "Перевод документа в процессе. Он разделен на #{total_parts} частей. В работе еще #{in_progress_parts}.\n#{participant_status}"
+      "Перевод документа в процессе.\nОн разделен на #{total_parts} частей.\nВ работе еще #{in_progress_parts}.\n#{participant_status}"
     else
-      "Сейчас никаких переводов не ведется. Вы можете записаться на перевод следующего документа командой /wait#{waiters_status}"
+      "Сейчас никаких переводов не ведется.\nВы можете записаться на перевод следующего документа командой /wait#{waiters_status}"
     end
   end
 
   private
 
   def pending_participant_status
-    return "Вы не участвуете в переводе этого документа. Для участия нажмите /in" unless doc_participant
+    return "Вы не участвуете в переводе этого документа.\nДля участия нажмите /in" unless doc_participant
 
-    "Вы участвуете в переводе этого документа. Вам назначено частей: #{doc_participant.parts}"
+    "Вы участвуете в переводе этого документа.\nВам назначено частей: #{doc_participant.parts}"
   end
 
   def participant_status
-    return "Вы не участвуете в переводе этого документа. Для участия в переводе следующего нажмите /wait" unless doc_participant
+    return "Вы не участвуете в переводе этого документа.\nДля участия в переводе следующего нажмите /wait" unless doc_participant
 
     case doc_participant.status
     when 'inactive'
-      "Вы уже завершили перевод своих частей текста. Их было у вас в работе #{doc_participant.parts}"
+      "Вы уже завершили перевод своих частей текста.\nИх было у вас в работе #{doc_participant.parts}"
     else
-      "Вы участвуете в переводе. У вас в работе частей: #{doc_participant.parts}"
+      "Вы участвуете в переводе.\nУ вас в работе частей: #{doc_participant.parts}"
     end
   end
 
