@@ -8,9 +8,9 @@ class StatusService < ApplicationService
 
   def call
     case document.status
-    when :pending
+    when 'pending'
       "Набираем волонтеров для перевода текущего документа. Страниц в нем примерно #{pages}. Пока делим на #{total_parts} частей. #{pending_participant_status}"
-    when :active
+    when 'active'
       "Перевод документа в процессе. Он разделен на #{total_parts} частей. В работе еще #{in_progress_parts}. #{participant_status}"
     else
       "Сейчас никаких переводов не ведется. Вы можете записаться на перевод следующего документа командой /wait#{waiters_status}"
@@ -29,7 +29,7 @@ class StatusService < ApplicationService
     return "Вы не участвуете в переводе этого документа. Для участия в переводе следующего нажмите /wait" unless doc_participant
 
     case doc_participant.status
-    when :inactive
+    when 'inactive'
       "Вы уже завершили перевод своих частей текста. Их было у вас в работе #{doc_participant.parts}"
     else
       "Вы участвуете в переводе. У вас в работе частей: #{doc_participant.parts}"
