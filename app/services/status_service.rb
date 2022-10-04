@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class StatusService < ApplicationService
+  # @attr_reader params [Hash]
+  # - message: [Telegram::Bot::Types::Message] Incoming message
 
   include DocumentsApiConcern
 
@@ -17,20 +19,6 @@ class StatusService < ApplicationService
 
   private
 
-  def total_parts
-    @total_parts ||= load_parts_count(document)
-  end
-
-  def in_progress_parts
-    @in_progress_parts ||= load_participants_count(document)
-  end
-
-  def pages
-    document_pages(
-      document_length(document_object)
-    )
-  end
-
   def pending_participant_status
     return "Вы не участвуете в переводе этого документа. Для участия нажмите /in" unless doc_participant
 
@@ -46,6 +34,24 @@ class StatusService < ApplicationService
     else
       "Вы участвуете в переводе. У вас в работе частей: #{doc_participant.parts}"
     end
+  end
+
+  def pages
+    @pages ||= document_pages(
+      document_length(document_object)
+    )
+  end
+
+  def total_parts
+    @total_parts ||= load_parts_count(document)
+  end
+
+  def in_progress_parts
+    @in_progress_parts ||= load_participants_count(document)
+  end
+
+  def message
+    params[:message]
   end
 
   def chat
