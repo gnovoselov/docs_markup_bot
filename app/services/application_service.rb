@@ -6,6 +6,8 @@ require 'concerns/docs_adapter_concern'
 require 'concerns/documents_api_concern'
 
 class ApplicationService
+  include ErrorsConcern
+
   def self.perform(params = {}, &block)
     new(params).call(&block)
   end

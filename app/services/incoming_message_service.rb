@@ -17,7 +17,7 @@ class IncomingMessageService < ApplicationService
       send_message(bot, message, text)
     end
   rescue StandardError => error
-    Rails.logger.error error
+    notify_support_and_log_error(error)
   end
 
   private
@@ -56,12 +56,11 @@ class IncomingMessageService < ApplicationService
       UnsubscribeService.perform(message: message)
     when /^\/out$/
       RemoveParticipantService.perform(message: message)
-    when /^\/divide/, /^\/clear/, /^\/process/
+    when /^\/divide/, /^\/clear/, /^\/process/, /^\/restart/
       INVALID_COMMAND_FORMAT
     end
   rescue StandardError => error
-    Rails.logger.info error
-    Rails.logger.info error.backtrace.join("\n")
+    notify_support_and_log_error(error)
     ERROR_MESSAGE
   end
 

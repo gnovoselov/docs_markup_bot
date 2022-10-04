@@ -38,6 +38,7 @@ class StartMessageService < ApplicationService
         }
       end
     end
+
     NotificationsService.perform(notifications: notifications)
 
     result << "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного"

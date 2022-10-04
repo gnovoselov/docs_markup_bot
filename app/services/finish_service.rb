@@ -24,6 +24,12 @@ class FinishService < ApplicationService
                              .map { |p| "@#{p.username}" if p.username }
                              .compact
                              .join(' ')
+
+        NotificationsService.perform(notifications: [{
+          chat_id: TELEGRAM_ADMIN_CHAT,
+          text: "Перевод готов: #{document.url}"
+        }])
+
         [
           "#{references} \nСпасибо всем за работу!",
           "@#{TELEGRAM_ADMIN} Перевод готов #{document.url}"
