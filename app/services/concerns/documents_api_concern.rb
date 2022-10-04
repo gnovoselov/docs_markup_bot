@@ -8,8 +8,14 @@ module DocumentsApiConcern
   include DocsAdapterConcern
 
   GOOGLE_DOCS_URL = /^https:\/\/docs.google.com\/document\/d\/([^\/]+)/
+  MIN_CHUNK_LENGTH = 700
+  APPROXIMATE_PAGE_LENGTH = 2300
 
   private
+
+  def min_chunk_length
+    MIN_CHUNK_LENGTH
+  end
 
   def change_document(document_id)
     document = get_document_object(document_id)
