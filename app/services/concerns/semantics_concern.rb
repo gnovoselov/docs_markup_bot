@@ -11,6 +11,10 @@ module SemanticsConcern
 
   private
 
+  def parts_caption(count)
+    count == 1 ? 'часть' : (count > 4 ? 'частей' : 'части')
+  end
+
   def express_joy
     JOY_EXPRESSIONS.sample
   end

@@ -36,7 +36,7 @@ class FinishService < ApplicationService
           "@#{TELEGRAM_ADMIN} Перевод готов #{document.url}"
         ]
       else
-        "#{express_joy}! В работе еще частей: #{count}"
+        "#{express_joy}! В работе еще #{count} #{parts_caption(count)}"
       end
     else
       "Вы не участвуете в переводе текущего документа или перевод уже завершен"

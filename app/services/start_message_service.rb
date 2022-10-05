@@ -6,6 +6,7 @@ class StartMessageService < ApplicationService
   # - document_id: [String] Google Docs ID
 
   include DocumentsApiConcern
+  include SemanticsConcern
 
   OPTIMAL_CHUNK_LENGTH = 1350
 
@@ -31,7 +32,7 @@ class StartMessageService < ApplicationService
     chat.participants.find_each do |participant|
       participant.subscriptions.each do |subscription|
         notifications << {
-          text: "У нас есть новый документ для перевода: #{TELEGRAM_CHAT_URL}",
+          text: "Привет! У нас есть новый документ для перевода: #{TELEGRAM_CHAT_URL}",
           chat_id: subscription.chat_id
         }
       end
@@ -49,7 +50,7 @@ class StartMessageService < ApplicationService
       )
       reference = ''
       reference = "@#{waiter.participant.username} " if waiter.participant.username
-      result << "#{reference}#{waiter.participant.full_name}, вам назначено частей: #{waiter.parts}"
+      result << "#{reference}#{waiter.participant.full_name}, вам назначено #{waiter.parts} #{parts_caption(waiter.parts)}"
       waiter.destroy
     end
 

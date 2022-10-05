@@ -27,7 +27,7 @@ class TakeService < ApplicationService
     doc_participant.active!
     share.destroy
 
-    "Спасибо за помощь! Вам назначена дополнительная работа. Теперь у вас частей: #{doc_participant.parts}"
+    "Спасибо за помощь! Вам назначена дополнительная работа. Теперь у вас #{doc_participant.parts} #{parts_caption(doc_participant.parts)}"
   end
 
   private

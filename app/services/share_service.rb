@@ -17,7 +17,7 @@ class ShareService < ApplicationService
 
     return "Вы не участвуете в переводе этого документа" unless doc_participant
 
-    return "У вас в работе всего #{doc_participant.parts} частей" if doc_participant.parts < part
+    return "У вас в работе всего #{doc_participant.parts} #{parts_caption(doc_participant.parts)}" if doc_participant.parts < part
 
     Share.create(
       participant_id: participant.id,

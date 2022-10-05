@@ -5,15 +5,16 @@ class StatusService < ApplicationService
   # - message: [Telegram::Bot::Types::Message] Incoming message
 
   include DocumentsApiConcern
+  include SemanticsConcern
 
   def call
     case document.status
     when 'pending'
-      "Набираем волонтеров для перевода текущего документа.\nСтраниц в нем примерно #{pages}.\nПока делим на #{total_parts} частей.\n\n#{pending_participant_status}"
+      "Набираем волонтеров для перевода текущего документа.\nСтраниц в нем примерно #{pages}.\nПока делим на #{total_parts} #{parts_caption(total_parts)}.\n\n#{pending_participant_status}"
     when 'active'
-      "Перевод документа в процессе.\nОн разделен на #{total_parts} частей.\nВ работе еще #{in_progress_parts}.\n\n#{participant_status}"
+      "Перевод документа в процессе.\nОн разделен на #{total_parts} #{parts_caption(total_parts)}.\nВ работе еще #{in_progress_parts}.\n\n#{participant_status}"
     else
-      "Сейчас никаких переводов не ведется.\nВы можете записаться на перевод следующего документа командой /wait#{waiters_status}"
+      "Сейчас никаких переводов не ведется.\n#{waiter_status}#{other_waiters_status}"
     end
   end
 
@@ -22,7 +23,7 @@ class StatusService < ApplicationService
   def pending_participant_status
     return "Вы не участвуете в переводе этого документа.\nДля участия нажмите /in" unless doc_participant
 
-    "Вы участвуете в переводе этого документа.\nВам назначено частей: #{doc_participant.parts}"
+    "Вы участвуете в переводе этого документа.\nВам назначено #{doc_participant.parts} #{parts_caption(doc_participant.parts)}"
   end
 
   def participant_status
@@ -32,18 +33,24 @@ class StatusService < ApplicationService
     when 'inactive'
       "Вы уже завершили перевод своих частей текста.\nИх было у вас в работе #{doc_participant.parts}"
     else
-      "Вы участвуете в переводе.\nУ вас в работе частей: #{doc_participant.parts}"
+      "Вы участвуете в переводе.\nУ вас в работе #{doc_participant.parts} #{parts_caption(doc_participant.parts)}"
     end
   end
 
-  def waiters_status
-    return unless waiters_count > 0
+  def other_waiters_status
+    return unless waiter_parts_count > 0
 
-    "\n\nУже есть заявки на #{waiters_count} частей."
+    "\n\nВсего есть заявок на #{waiter_parts_count} #{parts_caption(waiter_parts_count)}."
   end
 
-  def waiters_count
-    @waiters_count ||= chat.waiters&.sum(&:parts)
+  def waiter_status
+    waiter ?
+      "От вас есть заявка на #{waiter.parts} #{parts_caption(waiter.parts)} в следующем документе." :
+      "Вы можете записаться на перевод следующего документа командой /wait"
+  end
+
+  def waiter_parts_count
+    @waiter_parts_count ||= chat.waiters&.sum(&:parts)
   end
 
   def pages
@@ -89,5 +96,9 @@ class StatusService < ApplicationService
       document_id: document.id,
       participant_id: participant.id
     )
+  end
+
+  def waiter
+    @waiter = chat.waiters.find_by(participant_id: participant.id)
   end
 end
