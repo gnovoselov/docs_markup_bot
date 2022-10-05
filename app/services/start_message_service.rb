@@ -50,7 +50,7 @@ class StartMessageService < ApplicationService
       )
       reference = ''
       reference = "@#{waiter.participant.username} " if waiter.participant.username
-      result << "#{reference}#{waiter.participant.full_name}, вам назначено #{waiter.parts} #{parts_caption(waiter.parts)}"
+      result << "#{reference}#{waiter.participant.full_name}, у вас #{waiter.parts} #{parts_caption(waiter.parts)}"
       waiter.destroy
     end
 

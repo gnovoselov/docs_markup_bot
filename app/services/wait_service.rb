@@ -12,9 +12,9 @@ class WaitService < ApplicationService
     return unless message && chat
 
     message = if waiter.persisted?
-                "Вы уже ждете следующий документ. Вам будет назначено #{parts} #{parts_caption(parts)}"
+                "Вы уже ждете следующий документ. У вас будет #{parts} #{parts_caption(parts)}"
               else
-                "Спасибо за вашу заявку! Как только появится новый документ, вам будет назначено #{parts} #{parts_caption(parts)}"
+                "Спасибо за вашу заявку! Как только появится новый документ, у вас будет #{parts} #{parts_caption(parts)}"
               end
 
     waiter.update(parts: parts)

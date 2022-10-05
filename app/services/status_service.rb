@@ -23,7 +23,7 @@ class StatusService < ApplicationService
   def pending_participant_status
     return "Вы не участвуете в переводе этого документа.\nДля участия нажмите /in" unless doc_participant
 
-    "Вы участвуете в переводе этого документа.\nВам назначено #{doc_participant.parts} #{parts_caption(doc_participant.parts)}"
+    "Вы участвуете в переводе этого документа.\nУ вас #{doc_participant.parts} #{parts_caption(doc_participant.parts)}"
   end
 
   def participant_status
