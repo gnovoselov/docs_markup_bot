@@ -12,6 +12,7 @@ module SemanticsConcern
   private
 
   def parts_caption(count)
+    count = count.to_i
     count == 1 ? 'часть' : (count > 4 ? 'частей' : 'части')
   end
 
