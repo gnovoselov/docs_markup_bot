@@ -54,7 +54,7 @@ class FinishService < ApplicationService
   end
 
   def document
-    @document ||= chat&.documents.active.last
+    @document ||= chat&.documents&.active&.last
   end
 
   def participant
