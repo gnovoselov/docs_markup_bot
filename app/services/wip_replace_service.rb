@@ -22,7 +22,7 @@ class WipReplaceService < ApplicationService
         structural_element.paragraph.elements.each do |element|
           next if element&.text_run&.content&.blank?
 
-          if /[\s\t]*#{Regexp.escape(remove_non_ascii(old_wip_text).strip)}[\s\t]*/.match?(remove_non_ascii(element.text_run.content))
+          if /[\s\t]*#{Regexp.escape(remove_non_ascii(old_wip_text).strip)}[\s\t]*/.match?(remove_non_ascii(element.text_run&.content))
             count += 1
             if part == 0 || part == count
               changed += 1

@@ -61,6 +61,6 @@ class WipService < ApplicationService
   end
 
   def chunk_caption?(element)
-    element.text_run.content.match?(WIP_OTHERS)
+    element.text_run&.content&.match?(WIP_OTHERS)
   end
 end

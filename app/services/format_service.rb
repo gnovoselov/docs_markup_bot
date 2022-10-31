@@ -22,7 +22,7 @@ class FormatService < ApplicationService
         chunk_size ||= param_parts ? (finish_index / param_parts).round : DEFAULT_CHUNK_SIZE
 
         structural_element.paragraph.elements.each do |element|
-          # puts element.text_run.content
+          # puts element.text_run&.content
           requests << update_background(element, :text_run, color_index) if element.text_run.present?
         end
 
