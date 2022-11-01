@@ -15,6 +15,8 @@ module WipConcern
   end
 
   def remove_non_ascii(text)
+    return '' unless text
+
     text.encode(Encoding.find('ASCII'), :invalid => :replace, :undef => :replace, :replace => '')
   end
 end
