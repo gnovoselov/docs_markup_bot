@@ -15,7 +15,7 @@ class WipRemoveService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
-          next if element&.text_run&.content&.blank?
+          next if element&.text_run&.content.blank?
 
           if /[\s\t]*#{Regexp.escape(remove_non_ascii(wip_text).strip)}[\s\t]*/.match?(remove_non_ascii(element.text_run&.content))
             requests << remove_range(element.start_index - dept, element.end_index - dept)

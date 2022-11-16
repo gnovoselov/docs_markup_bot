@@ -16,9 +16,10 @@ class WipService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
-          next if element&.text_run&.content&.blank? || chunk_caption?(element)
+          next if element&.text_run&.content.blank? || chunk_caption?(element)
 
           bg = element.text_run.text_style.background_color
+
           if bg
             rgb = bg.color.rgb_color
             color = [rgb.red, rgb.green, rgb.blue]
@@ -61,6 +62,6 @@ class WipService < ApplicationService
   end
 
   def chunk_caption?(element)
-    element.text_run&.content&.match?(WIP_OTHERS)
+    element.text_run&.content.match?(WIP_OTHERS)
   end
 end

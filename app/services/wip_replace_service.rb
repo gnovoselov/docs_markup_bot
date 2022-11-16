@@ -20,7 +20,7 @@ class WipReplaceService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
-          next if element&.text_run&.content&.blank?
+          next if element&.text_run&.content.blank?
 
           if /[\s\t]*#{Regexp.escape(remove_non_ascii(old_wip_text).strip)}[\s\t]*/.match?(remove_non_ascii(element.text_run&.content))
             count += 1
