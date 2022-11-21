@@ -25,15 +25,16 @@ class FinishService < ApplicationService
                              .map { |p| "@#{p.username}" if p.username }
                              .compact
                              .join(' ')
-
-        NotificationsService.perform(notifications: [{
-          chat_id: TELEGRAM_ADMIN_CHAT,
-          text: "Перевод готов: #{document.url}"
-        }])
+        TELEGRAM_ADMIN_CHATS.each do |chat|
+          NotificationsService.perform(notifications: [{
+            chat_id: chat,
+            text: "Перевод готов: #{document.url}"
+          }])
+        end
 
         [
           "#{references} \nСпасибо всем за работу!",
-          "@#{TELEGRAM_ADMIN} Перевод готов #{document.url}"
+          "#{TELEGRAM_ADMINS.map { |a| "@#{a}" }.join(' ')} Перевод готов #{document.url}"
         ]
       else
         "#{express_joy}! В работе еще #{count} #{parts_caption(count)}"
