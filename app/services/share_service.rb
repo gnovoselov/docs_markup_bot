@@ -62,7 +62,7 @@ class ShareService < ApplicationService
   end
 
   def document
-    @document ||= chat&.documents.last
+    @document ||= chat&.documents&.last
   end
 
   def participant

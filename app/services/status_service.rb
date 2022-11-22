@@ -8,7 +8,7 @@ class StatusService < ApplicationService
   include SemanticsConcern
 
   def call
-    case document.status
+    case document&.status
     when 'pending'
       "Набираем волонтеров для перевода текущего документа.\nСтраниц в нем примерно #{pages}.\nПока делим на #{total_parts} #{parts_caption(total_parts)}.\n\n#{pending_participant_status}"
     when 'active'
@@ -76,7 +76,7 @@ class StatusService < ApplicationService
   end
 
   def document
-    @document ||= chat&.documents.last
+    @document ||= chat&.documents&.last
   end
 
   def document_object
