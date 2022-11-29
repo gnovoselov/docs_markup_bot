@@ -12,17 +12,15 @@ class AddParticipantService < ApplicationService
     return unless message && chat && document && document.pending?
 
     result = []
-    if doc_participant.persisted?
-      doc_participant.update(parts: parts)
-      result << "Вы уже участвуете в переводе этого документа. Всего у вас #{parts} #{parts_caption(parts)}"
-    else
-      doc_participant.update(parts: parts)
-      count = load_parts_count(document)
-      result << "#{express_joy}! Делим на #{count}"
-      if count >= document.max_participants
-        result << "Всем спасибо! Для перевода этого документа уже достаточно добровольцев!"
-        Thread.new { divider_service.divide_document(document) }
-      end
+    persisted = doc_participant.persisted?
+    doc_participant.update(parts: parts)
+    count = load_parts_count(document)
+    caption = persisted ? "Вы уже участвуете в переводе этого документа. Всего у вас #{parts} #{parts_caption(parts)}." : "#{express_joy}!"
+    result << "#{caption} Делим на #{count}"
+
+    if count >= document.max_participants
+      result << "Всем спасибо! Для перевода этого документа уже достаточно добровольцев!"
+      Thread.new { divider_service.divide_document(document) }
     end
 
     result
