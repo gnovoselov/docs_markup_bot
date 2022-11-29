@@ -32,12 +32,12 @@ module BackgroundsConcern
   private
 
   # Sets white background by default
-  def update_background(element, obj, color_index = 0)
+  def update_background(element, obj, color_index = 0, dept = 0)
     text_style = element.public_send(obj).text_style
     text_style&.update!(
       background_color: create_color(*ALLOWED_COLORS[color_index])
     )
 
-    update_text_background(element.start_index, element.end_index, text_style)\
+    update_text_background(element.start_index + dept, element.end_index + dept, text_style)\
   end
 end

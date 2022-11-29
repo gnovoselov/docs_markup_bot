@@ -6,7 +6,7 @@ module WipConcern
   extend ActiveSupport::Concern
 
   WIP = "WIP".freeze
-  WIP_OTHERS = /^\s?\[#{WIP} ([^\]]+)\]/
+  WIP_OTHERS = /^[\s\t]*\[#{WIP} ([^\]]+)\][\s\t]*/
 
   private
 
