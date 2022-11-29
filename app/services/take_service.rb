@@ -16,7 +16,7 @@ class TakeService < ApplicationService
 
     return "Эта команда используется для того, чтобы взять в работу чужой кусок, если кто-то хочет им поделиться. Для вызова справки нажмите /start" unless share
 
-    doc_participant.parts ||= 0
+    doc_participant.parts = 0 unless doc_participant.persisted?
     parts = WipReplaceService.perform(
       document_id: document&.document_id,
       from: share.participant.full_name,
