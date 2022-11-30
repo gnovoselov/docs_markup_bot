@@ -67,7 +67,7 @@ class IncomingMessageService < ApplicationService
       UnsubscribeService.perform(message: message)
     when /^\/out$/
       RemoveParticipantService.perform(message: message)
-    when /^\/divide/, /^\/clear/, /^\/process/, /^\/restart/
+    when /^\/divide/, /^\/clear/, /^\/process/, /^\/restart/, /^\/forceShare/
       INVALID_COMMAND_FORMAT
     end
   rescue StandardError => error
