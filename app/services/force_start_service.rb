@@ -5,6 +5,8 @@ class ForceStartService < ApplicationService
   # - message: [Telegram::Bot::Types::Message] Incoming message
 
   def call
+    return "Сейчас нет документов в ожидании" unless document
+
     DividerService.new.divide_document(document)
     nil
   end
