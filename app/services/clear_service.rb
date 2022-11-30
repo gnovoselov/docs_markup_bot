@@ -25,16 +25,16 @@ class ClearService < ApplicationService
     structural_element.paragraph.elements.each do |element|
       next unless element.text_run.present?
 
-      requests << update_background(element, :text_run, 0, -1 * dept)
-
       next if element.text_run.content.blank?
 
-      next if remove_non_ascii(element.text_run&.content) == DUPLICATED_LINK_CAPTION
+      next if element.text_run&.content == DUPLICATED_LINK_CAPTION
 
       if WIP_OTHERS.match?(remove_non_ascii(element.text_run&.content))
         requests << remove_range(element.start_index - dept, element.end_index - dept)
         dept += element.end_index - element.start_index
       end
+
+      requests << update_background(element, :text_run, 0, -1 * dept)
     end
   end
 end

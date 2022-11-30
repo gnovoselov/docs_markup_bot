@@ -38,6 +38,6 @@ module BackgroundsConcern
       background_color: create_color(*ALLOWED_COLORS[color_index])
     )
 
-    update_text_background(element.start_index + dept, element.end_index + dept, text_style)\
+    update_text_background(element.start_index + dept, element.end_index + dept, text_style)
   end
 end
