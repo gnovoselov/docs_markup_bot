@@ -14,6 +14,7 @@ class IncomingMessageService < ApplicationService
   def call
     Array(process_incoming_message).each do |text|
       next if text.blank?
+
       send_message(bot, message, text)
     end
   rescue StandardError => error
@@ -46,6 +47,8 @@ class IncomingMessageService < ApplicationService
       FinishService.perform(message: message)
     when /^\/forceFinish/i
       FinishService.perform(message: message, force: true)
+    when /^\/forceStart/i
+      ForceStartService.perform(message: message)
     when /^\/in(@DocsDividerBot)?[\t\s\r\n]*([^\s]+)?/
       AddParticipantService.perform(message: message, parts: $2)
     when /^\/share[\t\s\r\n]*([^\s]+)?/
