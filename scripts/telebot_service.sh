@@ -28,6 +28,7 @@ return 1
 fi
 echo 'Stopping service…' >&2
 kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+kill -s 9 `ps -ax | grep telebot:run | head -n 1 | cut -f1 -d" "`
 echo 'Service stopped' >&2
 }
 uninstall() {
