@@ -53,8 +53,8 @@ class IncomingMessageService < ApplicationService
       AddParticipantService.perform(message: message, parts: $2)
     when /^\/share[\t\s\r\n]*([^\s]+)?/
       ShareService.perform(message: message, part: $1.to_i)
-    when /^\/forceShare[\t\s\r\n]*([^\s]+)?/i
-      ShareService.perform(message: message, force: true, participant: $1)
+    when /^\/forceShare\s+(.*)$/i
+      ShareService.perform(message: message, force: true, participant: $1.strip)
     when /^\/take(@DocsDividerBot)?/
       TakeService.perform(message: message)
     when /^\/wait[\t\s\r\n]*([^\s]+)?/
