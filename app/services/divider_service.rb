@@ -40,7 +40,7 @@ class DividerService < ApplicationService
 
     notifications = [{
       chat_id: document.chat_id,
-      text: "#{references.join(' ')} \nOK. Документ разделен на части! #{duplicated_links_message} Можно приступать к переводу.\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
+      text: "#{references.join(' ')} \nOK. Документ разделен на части! Можно приступать к переводу.\n\n#{duplicated_links_message}\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
     }]
 
     participant_ids = document.participants.map(&:id)
