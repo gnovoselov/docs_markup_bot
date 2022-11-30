@@ -21,7 +21,7 @@ class ShareService < ApplicationService
     if param_force
       return "У вас недостаточно прав, чтобы отдать чужой кусок в работу кому-то другому" unless is_admin?(participant)
 
-      return "Указанный вами человек не найден или не участвует в переводе текущего документа" unless sharing_participant
+      return "Указанный вами человек не найден или не участвует в переводе текущего документа" unless sharing_participant && doc_participant
     else
       return "Вы не участвуете в переводе этого документа" unless doc_participant
 
