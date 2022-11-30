@@ -7,7 +7,7 @@
 # Default-Stop:      0 1 6
 # Description:       Runs specific rake task to listen messages from telegram
 ### END INIT INFO
-SCRIPT="sh /root/docs_markup_bot/scripts/run_telebot.sh"
+SCRIPT="cd /root/docs_markup_bot && /root/.rbenv/shims/bundle exec rake telebot:run RAILS_ENV=production"
 RUNAS=root
 PIDFILE=/var/run/run_telebot.pid
 LOGFILE=/var/log/run_telebot.log
@@ -28,7 +28,7 @@ return 1
 fi
 echo 'Stopping service…' >&2
 kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
-kill -s 9 `ps -ax | grep telebot:run | head -n 1 | cut -f1 -d" "`
+# kill -s 9 `ps -ax | grep telebot:run | head -n 1 | cut -f1 -d" "`
 echo 'Service stopped' >&2
 }
 uninstall() {
