@@ -13,13 +13,13 @@ class ClearService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
-          next unless element.text_run.present?
+          next if element.text_run.blank?
+
+          next if element.text_run&.content == DUPLICATED_LINK_CAPTION
 
           requests << update_background(element, :text_run, 0, -1 * dept)
 
           next if element.text_run.content.blank?
-
-          next if element.text_run&.content == DUPLICATED_LINK_CAPTION
 
           if WIP_OTHERS.match?(remove_non_ascii(element.text_run&.content))
             requests << remove_range(element.start_index - dept, element.end_index - dept)
