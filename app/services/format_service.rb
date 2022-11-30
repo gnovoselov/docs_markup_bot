@@ -19,7 +19,7 @@ class FormatService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         finish_index ||= document.body.content.last.end_index
-        chunk_size ||= param_parts && !param_parts.zero? ? (finish_index / param_parts).round : DEFAULT_CHUNK_SIZE
+        chunk_size ||= param_parts.zero? ? DEFAULT_CHUNK_SIZE : (finish_index / param_parts).round
 
         structural_element.paragraph.elements.each do |element|
           # puts element.text_run&.content
@@ -48,6 +48,6 @@ class FormatService < ApplicationService
   private
 
   def param_parts
-    params[:parts]
+    params[:parts] || 0
   end
 end
