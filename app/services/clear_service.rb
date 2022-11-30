@@ -29,6 +29,8 @@ class ClearService < ApplicationService
 
       next if element.text_run.content.blank?
 
+      next if remove_non_ascii(element.text_run&.content) == DUPLICATED_LINK_CAPTION
+
       if WIP_OTHERS.match?(remove_non_ascii(element.text_run&.content))
         requests << remove_range(element.start_index - dept, element.end_index - dept)
         dept += element.end_index - element.start_index

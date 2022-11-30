@@ -8,15 +8,7 @@ class RestartDocumentService < ApplicationService
   def call
     return unless chat_id && document_id
 
-    if document.active?
-      document.participants.each do |participant|
-        WipRemoveService.perform(
-          document_id: document&.document_id,
-          username: participant.full_name
-        )
-        ClearService.perform(document_id: document&.document_id)
-      end
-    end
+    ClearService.perform(document_id: document&.document_id) if document.active?
 
     document.destroy
 

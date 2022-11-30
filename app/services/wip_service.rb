@@ -16,7 +16,7 @@ class WipService < ApplicationService
     change_document(params[:document_id]) do |document, structural_element, requests|
       if structural_element.paragraph
         structural_element.paragraph.elements.each do |element|
-          next if element&.text_run&.content.blank? || chunk_caption?(element)
+          next if element&.text_run&.content.blank? || chunk_caption?(element) || duplicated_link_caption?(element)
 
           bg = element.text_run.text_style.background_color
 
@@ -63,5 +63,9 @@ class WipService < ApplicationService
 
   def chunk_caption?(element)
     element.text_run&.content.match?(WIP_OTHERS)
+  end
+
+  def duplicated_link_caption?(element)
+    element.text_run&.content == DUPLICATED_LINK_CAPTION
   end
 end

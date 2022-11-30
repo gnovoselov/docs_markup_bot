@@ -36,9 +36,11 @@ class DividerService < ApplicationService
       part += doc_participant.parts
     end
 
+    duplicated_links_message = LinksService.perform(document_id: document.document_id)
+
     notifications = [{
       chat_id: document.chat_id,
-      text: "#{references.join(' ')} \nOK. Документ разделен на части! Можно приступать к переводу.\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
+      text: "#{references.join(' ')} \nOK. Документ разделен на части! #{duplicated_links_message} Можно приступать к переводу.\n\n#{document.url}\n\nПо окончании нажмите, пожалуйста, /finish"
     }]
 
     participant_ids = document.participants.map(&:id)
