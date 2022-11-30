@@ -6,6 +6,7 @@ class ForceStartService < ApplicationService
 
   def call
     DividerService.new.divide_document(document)
+    nil
   end
 
   private
