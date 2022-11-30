@@ -7,7 +7,9 @@
 # Default-Stop:      0 1 6
 # Description:       Runs specific rake task to listen messages from telegram
 ### END INIT INFO
-SCRIPT="cd /root/docs_markup_bot && /root/.rbenv/shims/bundle exec rake telebot:run RAILS_ENV=production"
+LOCATION=/root/docs_markup_bot
+RAILS_ENV=production
+SCRIPT="/root/.rbenv/shims/rake telebot:run"
 RUNAS=root
 PIDFILE=/var/run/run_telebot.pid
 LOGFILE=/var/log/run_telebot.log
@@ -17,6 +19,7 @@ echo 'Service already running' >&2
 return 1
 fi
 echo 'Starting service…' >&2
+cd $LOCATION
 local CMD="$SCRIPT &> \"$LOGFILE\" & echo \$!"
   su -c "$CMD" $RUNAS > "$PIDFILE"
 echo 'Service started' >&2
