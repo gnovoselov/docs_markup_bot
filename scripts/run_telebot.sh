@@ -2,4 +2,4 @@
 
 cd /root/docs_markup_bot
 
-bin/rake telebot:run RAILS_ENV=production
+/root/.rbenv/shims/bundle exec rake telebot:run RAILS_ENV=production

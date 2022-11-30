@@ -1,11 +1,11 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          read_sqs
+# Provides:          run_telebot
 # Required-Start:    $local_fs $network $named $time $syslog
 # Required-Stop:     $local_fs $network $named $time $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Description:       Runs specific rake task to pull updates from AWS SQS
+# Description:       Runs specific rake task to listen messages from telegram
 ### END INIT INFO
 SCRIPT="sh /root/docs_markup_bot/scripts/run_telebot.sh"
 RUNAS=root
