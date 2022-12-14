@@ -7,6 +7,8 @@ module WipConcern
 
   WIP = "WIP".freeze
   WIP_OTHERS = /^[\s\t]*\[#{WIP} ([^\]]+)\][\s\t]*/
+  DUPLICATED_LINK_CAPTION = ' [DUPLICATED LINK] '
+  LINK_DUPLICATE_CAPTION = ' [LINK DUPLICATE] '
 
   private
 
@@ -18,5 +20,10 @@ module WipConcern
     return '' unless text
 
     text.encode(Encoding.find('ASCII'), :invalid => :replace, :undef => :replace, :replace => '')
+  end
+
+  def duplicated_link_caption?(element)
+    element.text_run&.content == DUPLICATED_LINK_CAPTION ||
+      element.text_run&.content == LINK_DUPLICATE_CAPTION
   end
 end

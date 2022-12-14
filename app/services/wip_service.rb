@@ -64,8 +64,4 @@ class WipService < ApplicationService
   def chunk_caption?(element)
     element.text_run&.content.match?(WIP_OTHERS)
   end
-
-  def duplicated_link_caption?(element)
-    element.text_run&.content == DUPLICATED_LINK_CAPTION
-  end
 end

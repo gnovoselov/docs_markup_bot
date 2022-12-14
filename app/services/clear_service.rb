@@ -15,7 +15,7 @@ class ClearService < ApplicationService
         structural_element.paragraph.elements.each do |element|
           next if element.text_run.blank?
 
-          next if element.text_run&.content == DUPLICATED_LINK_CAPTION
+          next if duplicated_link_caption?(element)
 
           requests << update_background(element, :text_run, 0, -1 * dept)
 
