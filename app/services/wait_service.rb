@@ -9,6 +9,7 @@ class WaitService < ApplicationService
 
   include DocumentsApiConcern
   include SemanticsConcern
+  include AdminConcern
   include ParticipantConcern
 
   def call
