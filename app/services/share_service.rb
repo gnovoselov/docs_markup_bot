@@ -10,6 +10,7 @@ class ShareService < ApplicationService
   include DocumentsApiConcern
   include SemanticsConcern
   include AdminConcern
+  include ParticipantConcern
 
   def call
     return unless message && chat && document
@@ -19,7 +20,7 @@ class ShareService < ApplicationService
     return "Перевод документа уже завершен" unless document.active?
 
     if param_force
-      return "У вас недостаточно прав, чтобы отдать чужой кусок в работу кому-то другому" unless is_admin?(participant)
+      return "У вас недостаточно полномочий, чтобы отдать чужой кусок в работу кому-то другому" unless is_admin?(participant)
 
       return "Указанный вами человек не найден или не участвует в переводе текущего документа" unless sharing_participant && doc_participant
     else
@@ -72,16 +73,6 @@ class ShareService < ApplicationService
 
   def param_participant
     params[:participant]
-  end
-
-  def participant_props
-    /^@/.match?(param_participant) ?
-      [{ username: param_participant[1..-1] }] :
-      ["first_name || ' ' || last_name = ? OR first_name = ?", param_participant, param_participant]
-  end
-
-  def load_participant
-    chat.participants.find_by(*participant_props)
   end
 
   def sharing_participant

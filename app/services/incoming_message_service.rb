@@ -59,6 +59,10 @@ class IncomingMessageService < ApplicationService
       TakeService.perform(message: message)
     when /^\/wait[\t\s\r\n]*([^\s]+)?/
       WaitService.perform(message: message, parts: $1)
+    when /^\/unwait/i
+      WaitService.perform(message: message, cancel: true)
+    when /^\/forceUnwait\s+(.*)$/i
+      WaitService.perform(message: message, cancel: true, participant: $1.strip)
     when /^\/status$/
       StatusService.perform(message: message)
     when /^\/subscribe$/
@@ -67,7 +71,7 @@ class IncomingMessageService < ApplicationService
       UnsubscribeService.perform(message: message)
     when /^\/out$/
       RemoveParticipantService.perform(message: message)
-    when /^\/divide/, /^\/clear/, /^\/process/, /^\/restart/, /^\/forceShare/
+    when /^\/divide/, /^\/clear/, /^\/process/, /^\/restart/, /^\/forceShare/i, /^\/forceUnwait/i
       INVALID_COMMAND_FORMAT
     end
   rescue StandardError => error
