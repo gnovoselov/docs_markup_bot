@@ -23,7 +23,7 @@ class WaitService < ApplicationService
     result = if waiter.persisted?
                 "Вы уже ждете следующий документ. У вас будет #{parts} #{parts_caption(parts)}"
               else
-                "Спасибо за вашу заявку! Как только появится новый документ, у вас будет #{parts} #{parts_caption(parts)}"
+                "Спасибо за вашу заявку! Как только появится новый документ, у вас будет #{parts} #{parts_caption(parts)}. Вы можете отписать командой /unwait"
               end
 
     waiter.update(parts: parts)
@@ -73,7 +73,7 @@ class WaitService < ApplicationService
   end
 
   def waiting_participant
-    @waiting_participant ||= param_cancel ? load_participant : participant
+    @waiting_participant ||= param_participant ? load_participant : participant
   end
 
   def chat
