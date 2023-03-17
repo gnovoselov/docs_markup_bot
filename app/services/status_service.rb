@@ -50,7 +50,7 @@ class StatusService < ApplicationService
   end
 
   def waiter_parts_count
-    @waiter_parts_count ||= chat.waiters&.sum(&:parts)
+    @waiter_parts_count ||= chat&.waiters&.sum(&:parts)
   end
 
   def pages
@@ -99,6 +99,6 @@ class StatusService < ApplicationService
   end
 
   def waiter
-    @waiter = chat.waiters.find_by(participant_id: participant.id)
+    @waiter = chat&.waiters&.find_by(participant_id: participant.id)
   end
 end
