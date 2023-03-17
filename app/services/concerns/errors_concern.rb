@@ -13,6 +13,9 @@ module ErrorsConcern
       text: "!!!FAILURE!!!\n#{error}"
     }])
 
+    `service run_telebot stop`
+    `service run_telebot start`
+
     Rails.logger.error error
     Rails.logger.info error.backtrace.join("\n")
   end

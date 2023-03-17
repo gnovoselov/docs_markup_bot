@@ -24,7 +24,7 @@ class WaitService < ApplicationService
     result = if waiter.persisted?
                 "Вы уже ждете следующий документ. У вас будет #{parts} #{parts_caption(parts)}"
               else
-                "Спасибо за вашу заявку! Как только появится новый документ, у вас будет #{parts} #{parts_caption(parts)}. Вы можете отписать командой /unwait"
+                "Спасибо за вашу заявку! Как только появится новый документ, у вас будет #{parts} #{parts_caption(parts)}. Вы можете отписаться командой /unwait"
               end
 
     waiter.update(parts: parts)
