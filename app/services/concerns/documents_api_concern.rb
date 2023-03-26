@@ -51,6 +51,8 @@ module DocumentsApiConcern
   end
 
   def document_length(object)
+    return 0 if object.blank?
+
     length = object.body.content.last.end_index
     length = MIN_CHUNK_LENGTH if length < MIN_CHUNK_LENGTH
     length
