@@ -32,6 +32,8 @@ module DocumentsApiConcern
   end
 
   def get_document_object(document_id)
+    return if document_id.blank?
+
     docs_adapter.get_document document_id
   end
 
