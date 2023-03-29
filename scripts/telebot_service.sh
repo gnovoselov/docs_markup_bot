@@ -8,7 +8,7 @@
 # Description:       Runs specific rake task to listen messages from telegram
 ### END INIT INFO
 LOCATION=/root/docs_markup_bot
-SCRIPT="/usr/local/rvm/rubies/ruby-3.1.2/bin/rake telebot:run RAILS_ENV=production"
+SCRIPT="/usr/local/rvm/rubies/ruby-3.1.2/bin/bundle exec rake telebot:run RAILS_ENV=production"
 RUNAS=root
 PIDFILE=/var/run/run_telebot.pid
 LOGFILE=/var/log/run_telebot.log
