@@ -47,5 +47,5 @@ group :development do
 end
 
 gem "google-api-client"
-gem 'telegram-bot-ruby'
+gem 'telegram-bot-ruby', '~> 1.0'
 gem 'whenever', require: false
