@@ -19,6 +19,8 @@ module DocumentsApiConcern
 
   def change_document(document_id)
     document = get_document_object(document_id)
+    return unless document
+
     requests = []
 
     document.body.content.each do |structural_element|
