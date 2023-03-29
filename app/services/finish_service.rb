@@ -10,6 +10,8 @@ class FinishService < ApplicationService
   include AdminConcern
 
   def call
+    return unless document
+
     if param_force
       return "У вас нет прав на принудительное завершение работы над документом" unless is_admin?(participant)
     else
