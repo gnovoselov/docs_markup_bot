@@ -80,7 +80,8 @@ class IncomingMessageService < ApplicationService
   end
 
   def send_message(bot, message, text)
-    bot.api.send_message(chat_id: message.chat.id, text: text)
+    # TODO: uncomment this row to send messages to Telegram:
+    # bot.api.send_message(chat_id: message.chat.id, text: text)
   # rescue Telegram::Bot::Exceptions::ResponseError => e
     # root@GoogleDocsDivider:~/docs_markup_bot# bin/rake telebot:run RAILS_ENV=production
     # rake aborted!
