@@ -22,9 +22,13 @@ class NotificationsService < ApplicationService
     attempts ||= 0
     bot.api.send_message(notification)
   rescue Telegram::Bot::Exceptions::ResponseError => e
-    raise e if (attempts += 1) > MAX_ATTEMPTS
-    sleep 5
-    retry
+    if (attempts += 1) > MAX_ATTEMPTS
+      Rails.logger.info "Notification has failed to be sent: #{notification.inspect}"
+      notify_support_and_log_error(e)
+    else
+      sleep 5
+      retry
+    end
   end
 
   def notifications
