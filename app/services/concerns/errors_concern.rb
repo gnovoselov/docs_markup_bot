@@ -7,16 +7,21 @@ module ErrorsConcern
 
   private
 
-  def notify_support_and_log_error(error)
-    Rails.logger.error error
-    Rails.logger.info error.backtrace.join("\n")
+  def notify_support_and_log_error(error, message = nil)
+    Rails.logger.error(
+      collect_errors([message, error.to_s, error.backtrace])
+    )
 
     NotificationsService.perform(notifications: [{
       chat_id: TELEGRAM_SUPPORT_CHAT,
-      text: "!!!FAILURE!!!\n#{error}"
+      text: collect_errors(['!!!FAILURE!!!', message, error])
     }])
 
     # `service run_telebot stop`
     # `service run_telebot start`
+  end
+
+  def collect_errors(parts)
+    parts.compact.join("\n")
   end
 end
