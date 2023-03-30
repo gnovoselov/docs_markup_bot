@@ -9,10 +9,16 @@ class TgListenService < ApplicationService
       end
     end
   rescue Telegram::Bot::Exceptions::ResponseError => e
-    notify_support_and_log_error(e)
-    raise e if (attempts += 1) > 5
-    sleep 5
-    retry
+    if (attempts += 1) > 5
+      message = "Restarting service because of an error"
+      notify_support_and_log_error(e, message)
+      `service run_telebot restart`
+      exit
+    else
+      notify_support_and_log_error(e)
+      sleep 5
+      retry
+    end
   rescue StandardError => error
     notify_support_and_log_error(error)
   end

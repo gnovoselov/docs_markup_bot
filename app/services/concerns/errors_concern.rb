@@ -16,9 +16,6 @@ module ErrorsConcern
       chat_id: TELEGRAM_SUPPORT_CHAT,
       text: collect_errors(['!!!FAILURE!!!', message, error])
     }])
-
-    # `service run_telebot stop`
-    # `service run_telebot start`
   end
 
   def collect_errors(parts)
