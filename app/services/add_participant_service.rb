@@ -13,6 +13,10 @@ class AddParticipantService < ApplicationService
 
     result = []
     persisted = doc_participant.persisted?
+    if parts.to_i > 1
+      result << "По новым правилам мы больше не можем брать в работу несколько частей. Вам будет назначена одна часть."
+      parts = 1
+    end
     doc_participant.update(parts: parts)
     count = load_parts_count(document)
     caption = persisted ? "Вы уже участвуете в переводе этого документа. Всего у вас #{parts} #{parts_caption(parts)}." : "#{express_joy}!"
