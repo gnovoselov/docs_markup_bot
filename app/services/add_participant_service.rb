@@ -13,6 +13,7 @@ class AddParticipantService < ApplicationService
 
     result = []
     persisted = doc_participant.persisted?
+    parts = params[:parts] || 1
     if parts.to_i > 1
       result << "По новым правилам мы больше не можем брать в работу несколько частей. Вам будет назначена одна часть."
       parts = 1
@@ -34,10 +35,6 @@ class AddParticipantService < ApplicationService
 
   def message
     params[:message]
-  end
-
-  def parts
-    params[:parts] || 1
   end
 
   def divider_service

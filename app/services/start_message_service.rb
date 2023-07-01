@@ -40,7 +40,7 @@ class StartMessageService < ApplicationService
 
     NotificationsService.perform(notifications: notifications)
 
-    result << "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного"
+    result << "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно #{document_pages(length)}.\n\nКто участвует, нажмите, пожалуйста, /in"
 
     chat.waiters.find_each do |waiter|
       doc_participant = DocumentParticipant.create(

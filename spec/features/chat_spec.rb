@@ -83,9 +83,12 @@ RSpec.describe 'Document processing', type: :feature,
     }]
 
     after_receiving[{
-      message: '/in',
+      message: '/in 2',
       from: translator,
-      expect_response: "Делим на 2"
+      expect_response: [
+        "По новым правилам мы больше не можем брать в работу несколько частей. Вам будет назначена одна часть.",
+        "Делим на 2"
+      ]
     }]
 
     after_receiving[{
