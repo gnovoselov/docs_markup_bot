@@ -77,7 +77,7 @@ RSpec.describe 'Document processing', type: :feature,
       message: "/process #{document_url}",
       from: admin,
       expect_response: [
-        "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно 12 с небольшим.\n\nКто участвует, нажмите, пожалуйста, /in\nПосле команды можно добавить количество кусочков, которые вы сегодня готовы перевести, если их больше одного",
+        "Друзья, у нас есть новый документ для перевода!\nСтраниц в нем примерно 12 с небольшим.\n\nКто участвует, нажмите, пожалуйста, /in",
         "@#{waiter.username} #{waiter.first_name} #{waiter.last_name}, у вас 1 часть"
       ]
     }]
@@ -95,6 +95,36 @@ RSpec.describe 'Document processing', type: :feature,
       message: '/in',
       from: translator,
       expect_response: "Вы уже участвуете в переводе этого документа. Всего у вас 1 часть. Делим на 2"
+    }]
+
+    after_receiving[{
+      message: '/out',
+      from: translator,
+      expect_response: "Вы больше не участвуете в переводе этого документа. Сейчас добровольцев: 1"
+    }]
+
+    after_receiving[{
+      message: '/in',
+      from: translator,
+      expect_response: "Делим на 2"
+    }]
+
+    after_receiving[{
+      message: "/forceOut @#{admin.username}",
+      from: translator,
+      expect_response: "@#{admin.username} не участвует в переводе этого документа. Сейчас добровольцев: 2"
+    }]
+
+    after_receiving[{
+      message: "/forceOut @#{translator.username}",
+      from: translator,
+      expect_response: "#{translator.first_name} #{translator.last_name} больше не участвует в переводе этого документа. Сейчас добровольцев: 1"
+    }]
+
+    after_receiving[{
+      message: '/in',
+      from: translator,
+      expect_response: "Делим на 2"
     }]
     
     after_receiving[{

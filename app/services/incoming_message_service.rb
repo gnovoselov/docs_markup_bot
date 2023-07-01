@@ -71,6 +71,8 @@ class IncomingMessageService < ApplicationService
       UnsubscribeService.perform(message: message)
     when /^\/out$/
       RemoveParticipantService.perform(message: message)
+    when /^\/forceOut\s+(.*)$/
+      RemoveParticipantService.perform(message: message, participant: $1.strip)
     when /^\/divide/, /^\/clear/, /^\/process/, /^\/restart/, /^\/forceShare/i, /^\/forceUnwait/i
       INVALID_COMMAND_FORMAT
     end
