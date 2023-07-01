@@ -1,3 +1,11 @@
+# == Schema Information
+#
+# Table name: chats
+#
+#  id         :integer          not null, primary key
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Chat < ApplicationRecord
   has_many :documents, dependent: :delete_all
   has_many :participants, through: :documents

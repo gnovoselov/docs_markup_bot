@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: participants
+#
+#  id         :integer          not null, primary key
+#  first_name :string
+#  last_name  :string
+#  username   :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Participant < ApplicationRecord
   has_many :document_participants
   has_many :documents, through: :document_participants

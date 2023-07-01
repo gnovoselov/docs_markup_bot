@@ -34,3 +34,5 @@
 config/credentials.json
 config/token.yml
 config/telebot.yml
+
+.byebug_history

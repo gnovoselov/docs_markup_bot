@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: documents
+#
+#  id                   :integer          not null, primary key
+#  max_participants     :integer
+#  optimal_participants :integer
+#  status               :integer          default("inactive")
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  chat_id              :integer
+#  document_id          :string
+#
 class Document < ApplicationRecord
   belongs_to :chat
   has_many :document_participants, dependent: :delete_all
