@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_28_005405) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_01_075014) do
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
   end
 
   create_table "document_participants", force: :cascade do |t|
@@ -33,6 +34,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_28_005405) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "optimal_participants"
+  end
+
+  create_table "fuckups", force: :cascade do |t|
+    t.integer "document_id"
+    t.integer "participant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "participants", force: :cascade do |t|

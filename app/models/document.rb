@@ -15,6 +15,8 @@ class Document < ApplicationRecord
   belongs_to :chat
   has_many :document_participants, dependent: :delete_all
   has_many :participants, through: :document_participants
+  has_many :fuckups, dependent: :nullify
+  has_many :fuckedup_participants, through: :fuckups, source: :participant
   has_many :shares, dependent: :delete_all
 
   enum status: %i[inactive pending active done]

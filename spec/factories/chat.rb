@@ -1,3 +1,5 @@
 FactoryBot.define do
-    factory :chat
+    factory :chat do
+        name { 'Test chat' }
+    end
 end

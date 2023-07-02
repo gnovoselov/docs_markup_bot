@@ -3,12 +3,14 @@
 # Table name: chats
 #
 #  id         :integer          not null, primary key
+#  name       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 class Chat < ApplicationRecord
   has_many :documents, dependent: :delete_all
   has_many :participants, through: :documents
+  has_many :document_participants, through: :documents
   has_many :subscriptions, dependent: :delete_all
   has_many :waiters, dependent: :delete_all
 

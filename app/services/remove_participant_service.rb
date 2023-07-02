@@ -8,6 +8,7 @@ class RemoveParticipantService < ApplicationService
   include DocumentsApiConcern
   include SemanticsConcern
   include ParticipantConcern
+  include AdminConcern
 
   def call
     return if !message || !chat || !document || !document.pending?

@@ -35,10 +35,23 @@ class FinishService < ApplicationService
                             .map { |p| "@#{p.username}" if p.username }
                             .compact
                             .join(' ')
-      TELEGRAM_ADMIN_CHATS.each do |chat|
+      TELEGRAM_ADMIN_CHATS.each do |chat_id|
         NotificationsService.perform(notifications: [{
-          chat_id: chat,
+          chat_id: chat_id,
           text: "Перевод готов: #{document.url}"
+        }])
+      end
+
+      stats = []
+      stats << "Статистика чата: #{chat.name}"
+      stats << "В переводе участвовали:\n#{current_participants}"
+      stats << "Неактивные пользователи:\n#{inactive_participants}" if inactive_participants.present?
+      stats << "Факапщики сегодня: #{fuckups}" if fuckups.present?
+
+      TELEGRAM_STATISTICS_CHATS.each do |chat_id|
+        NotificationsService.perform(notifications: [{
+          chat_id: chat_id,
+          text: stats.join("\n\n")
         }])
       end
 
@@ -59,6 +72,26 @@ class FinishService < ApplicationService
 
   def param_force
     params[:force]
+  end
+
+  def current_participants
+    document.participants.map(&:full_reference).join("\n")
+  end
+
+  def inactive_participants
+    chat.participants.where.not(id: active_participant_ids).map(&:full_reference).join("\n")
+  end
+
+  def active_participant_ids
+    chat.document_participants
+        .select(:participant_id)
+        .where('document_participants.created_at > ?', 28.days.ago)
+        .distinct(:participant_id)
+        .map(&:participant_id)
+  end
+
+  def fuckups
+    document.fuckedup_participants.map(&:full_reference).join("\n")
   end
 
   def chat

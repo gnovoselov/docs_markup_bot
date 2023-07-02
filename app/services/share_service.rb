@@ -23,6 +23,11 @@ class ShareService < ApplicationService
       return "У вас недостаточно полномочий, чтобы отдать чужой кусок в работу кому-то другому" unless is_admin?(participant)
 
       return "Указанный вами человек не найден или не участвует в переводе текущего документа" unless sharing_participant && doc_participant
+
+      Fuckup.create(
+        participant_id: sharing_participant.id,
+        document_id: document.id
+      )
     else
       return "Вы не участвуете в переводе этого документа" unless doc_participant
 

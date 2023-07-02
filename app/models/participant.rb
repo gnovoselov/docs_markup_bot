@@ -12,6 +12,7 @@
 class Participant < ApplicationRecord
   has_many :document_participants
   has_many :documents, through: :document_participants
+  has_many :fuckups, dependent: :delete_all
   has_many :shares, dependent: :delete_all
   has_many :waiters, dependent: :delete_all
   has_many :subscriptions, dependent: :delete_all
@@ -21,5 +22,12 @@ class Participant < ApplicationRecord
     return name if name.present?
 
     username
+  end
+
+  def full_reference
+    result = []
+    result << "@#{username}" if username
+    result << full_name
+    result.join(' ')
   end
 end

@@ -17,9 +17,9 @@ class StartMessageService < ApplicationService
       return "Работа над документом завершена" if document.done?
       return "Документ уже в работе"
     end
-
+    
     length = document_length(document_object)
-
+    
     return "Этот документ пуст или недоступен!" if length == 0
 
     result = []
