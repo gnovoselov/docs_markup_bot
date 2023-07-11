@@ -22,10 +22,12 @@ class NotificationsService < ApplicationService
     attempts ||= 0
     bot.api.send_message(notification)
   rescue Telegram::Bot::Exceptions::ResponseError => e
+    error_code ||= SecureRandom.hex
     if (attempts += 1) > MAX_ATTEMPTS
-      message = "Notification has failed to be sent (attempt #{attempts}): #{notification.inspect}"
-      log_error(e, message)
+      message = "[ERROR CODE #{error_code}] Notification has failed to be sent to #{notification[:chat_id]} (attempt #{attempts})"
+      notify_support_and_log_error(e, message)
     else
+      log_error(e, "#{message}: #{notification.inspect}")
       sleep 5
       retry
     end
