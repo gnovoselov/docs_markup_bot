@@ -79,7 +79,7 @@ class FinishService < ApplicationService
   end
 
   def inactive_participants
-    chat.participants.where.not(id: active_participant_ids).distinct.map(&:full_reference).join("\n")
+    chat.participants.where.not(id: active_participant_ids + INACTIVE_EXCEPTIONS).distinct.map(&:full_reference).join("\n")
   end
 
   def active_participant_ids
